@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Jax&#39;s Hideout</title>
-    <link>https://blog.jaxd.dev/</link>
-    <description>Recent content on Jax&#39;s Hideout</description>
+    <title>Jax&#39;s Hideout.</title>
+    <link>https://anger.github.io/blog/</link>
+    <description>Recent content on Jax&#39;s Hideout.</description>
     <image>
-      <title>Jax&#39;s Hideout</title>
-      <url>https://blog.jaxd.dev/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>https://blog.jaxd.dev/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+      <title>Jax&#39;s Hideout.</title>
+      <url>https://anger.github.io/blog/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://anger.github.io/blog/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 14 Feb 2023 06:59:00 +0000</lastBuildDate><atom:link href="https://blog.jaxd.dev/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 14 Feb 2023 06:59:00 +0000</lastBuildDate><atom:link href="https://anger.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>LACTF 2023 Write-Ups</title>
-      <link>https://blog.jaxd.dev/post/lactf2023/</link>
+      <link>https://anger.github.io/blog/post/lactf2023/</link>
       <pubDate>Tue, 14 Feb 2023 06:59:00 +0000</pubDate>
       
-      <guid>https://blog.jaxd.dev/post/lactf2023/</guid>
+      <guid>https://anger.github.io/blog/post/lactf2023/</guid>
       <description>My write-ups for LACTF 2023.</description>
     </item>
     
     <item>
       <title>C&#43;&#43; is Odd</title>
-      <link>https://blog.jaxd.dev/post/c-plus-plus-is-odd/</link>
+      <link>https://anger.github.io/blog/post/c-plus-plus-is-odd/</link>
       <pubDate>Sun, 05 Feb 2023 06:59:00 +0000</pubDate>
       
-      <guid>https://blog.jaxd.dev/post/c-plus-plus-is-odd/</guid>
+      <guid>https://anger.github.io/blog/post/c-plus-plus-is-odd/</guid>
       <description>C++ is odd, and in this post I go into the one of the reasons why.</description>
     </item>
     
     <item>
       <title>A Practical Guide to Supply Chain Attacks</title>
-      <link>https://blog.jaxd.dev/post/a-practical-guide-to-supply-chain-attacks/</link>
+      <link>https://anger.github.io/blog/post/a-practical-guide-to-supply-chain-attacks/</link>
       <pubDate>Sun, 11 Dec 2022 06:59:00 +0000</pubDate>
       
-      <guid>https://blog.jaxd.dev/post/a-practical-guide-to-supply-chain-attacks/</guid>
+      <guid>https://anger.github.io/blog/post/a-practical-guide-to-supply-chain-attacks/</guid>
       <description>A practical guide to Supply Chain Attacks in a cyber environment.</description>
     </item>
     
     <item>
       <title>Earning the Security&#43; at 16</title>
-      <link>https://blog.jaxd.dev/post/security-plus-at-16/</link>
+      <link>https://anger.github.io/blog/post/security-plus-at-16/</link>
       <pubDate>Wed, 20 Oct 2021 06:59:00 +0000</pubDate>
       
-      <guid>https://blog.jaxd.dev/post/security-plus-at-16/</guid>
+      <guid>https://anger.github.io/blog/post/security-plus-at-16/</guid>
       <description>How I passed the CompTIA Security+ exam at 16.</description>
     </item>
     

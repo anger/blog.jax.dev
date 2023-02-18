@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>write-up on Jax&#39;s Hideout</title>
-    <link>https://blog.jaxd.dev/tags/write-up/</link>
-    <description>Recent content in write-up on Jax&#39;s Hideout</description>
+    <title>write-up on Jax&#39;s Hideout.</title>
+    <link>https://anger.github.io/blog/tags/write-up/</link>
+    <description>Recent content in write-up on Jax&#39;s Hideout.</description>
     <image>
-      <title>Jax&#39;s Hideout</title>
-      <url>https://blog.jaxd.dev/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>https://blog.jaxd.dev/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+      <title>Jax&#39;s Hideout.</title>
+      <url>https://anger.github.io/blog/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://anger.github.io/blog/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 14 Feb 2023 06:59:00 +0000</lastBuildDate><atom:link href="https://blog.jaxd.dev/tags/write-up/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 14 Feb 2023 06:59:00 +0000</lastBuildDate><atom:link href="https://anger.github.io/blog/tags/write-up/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>LACTF 2023 Write-Ups</title>
-      <link>https://blog.jaxd.dev/post/lactf2023/</link>
+      <link>https://anger.github.io/blog/post/lactf2023/</link>
       <pubDate>Tue, 14 Feb 2023 06:59:00 +0000</pubDate>
       
-      <guid>https://blog.jaxd.dev/post/lactf2023/</guid>
+      <guid>https://anger.github.io/blog/post/lactf2023/</guid>
       <description>My write-ups for LACTF 2023.</description>
     </item>
     
