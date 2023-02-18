@@ -1,4 +1,4 @@
-baseURL: "https://blog.jaxd.dev"
+baseURL: https://blog.jaxd.dev
 title: Jax's Hideout
 paginate: 5
 theme: PaperMod
@@ -16,7 +16,7 @@ minify:
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
-  title: blog.jaxd.dev
+  title: Jax | Anger
   description: "A personal blog"
   keywords: [Blog, Portfolio, PaperMod, CTF, Hacking, Write-up]
   author: Jax
