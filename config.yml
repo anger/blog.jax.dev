@@ -1,5 +1,5 @@
 baseURL: "https://anger.github.io/blog.jaxd.dev"
-title: Jax's Hideout.
+title: Jax's Hideout
 paginate: 5
 theme: PaperMod
 
@@ -46,9 +46,9 @@ params:
     # disableHLJS: true # to disable highlight.js
     # disableFingerprinting: true
     favicon: "favicon.ico"
-    favicon16x16: "favicon.ico"
-    favicon32x32: "favicon.ico"
-    apple_touch_icon: "favicon.ico"
+    favicon16x16: "favicon-16x16.png"
+    favicon32x32: "favicon-32x32.png"
+    apple_touch_icon: "apple-touch-icon"
     safari_pinned_tab: "favicon.ico"
 
   label:
@@ -73,7 +73,7 @@ params:
 
   # home-info mode
   homeInfoParams:
-    Title: "Greetings, earthling \U0001F596"
+    Title: "Greetings, earthlings \U0001F596"
     Content: This is my personal blog, where I ramble about a variety of subjects. Typically, I discuss CTFs, security research, exploit development, and programming. I also post my write-ups! Have a pleasant stay!
 
   socialIcons:
