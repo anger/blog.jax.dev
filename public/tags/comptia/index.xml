@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>CompTIA on Jax&#39;s Hideout</title>
+    <link>https://blog.jaxd.dev/tags/comptia/</link>
+    <description>Recent content in CompTIA on Jax&#39;s Hideout</description>
+    <image>
+      <title>Jax&#39;s Hideout</title>
+      <url>https://blog.jaxd.dev/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://blog.jaxd.dev/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 20 Oct 2021 06:59:00 +0000</lastBuildDate><atom:link href="https://blog.jaxd.dev/tags/comptia/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Earning the Security&#43; at 16</title>
+      <link>https://blog.jaxd.dev/post/security-plus-at-16/</link>
+      <pubDate>Wed, 20 Oct 2021 06:59:00 +0000</pubDate>
+      
+      <guid>https://blog.jaxd.dev/post/security-plus-at-16/</guid>
+      <description>How I passed the CompTIA Security+ exam at 16.</description>
+    </item>
+    
+  </channel>
+</rss>
