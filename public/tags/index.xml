@@ -10,11 +10,11 @@
       <link>https://blog.jaxd.dev/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 12 Mar 2023 16:52:12 -0400</lastBuildDate><atom:link href="https://blog.jaxd.dev/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 12 Mar 2023 19:54:52 -0400</lastBuildDate><atom:link href="https://blog.jaxd.dev/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>2023</title>
       <link>https://blog.jaxd.dev/tags/2023/</link>
-      <pubDate>Sun, 12 Mar 2023 16:52:12 -0400</pubDate>
+      <pubDate>Sun, 12 Mar 2023 19:54:52 -0400</pubDate>
       
       <guid>https://blog.jaxd.dev/tags/2023/</guid>
       <description></description>
@@ -23,9 +23,27 @@
     <item>
       <title>ctf</title>
       <link>https://blog.jaxd.dev/tags/ctf/</link>
-      <pubDate>Sun, 12 Mar 2023 16:52:12 -0400</pubDate>
+      <pubDate>Sun, 12 Mar 2023 19:54:52 -0400</pubDate>
       
       <guid>https://blog.jaxd.dev/tags/ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dvc</title>
+      <link>https://blog.jaxd.dev/tags/dvc/</link>
+      <pubDate>Sun, 12 Mar 2023 19:54:52 -0400</pubDate>
+      
+      <guid>https://blog.jaxd.dev/tags/dvc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>OSINT</title>
+      <link>https://blog.jaxd.dev/tags/osint/</link>
+      <pubDate>Sun, 12 Mar 2023 19:54:52 -0400</pubDate>
+      
+      <guid>https://blog.jaxd.dev/tags/osint/</guid>
       <description></description>
     </item>
     
