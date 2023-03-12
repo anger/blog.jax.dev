@@ -8,7 +8,7 @@ tags: ["ctf", "hxp", "write-up", "2023"]
 date: 2023-03-12T16:52:12-04:00
 draft: false
 ---
-This was an incredibly difficult but fun CTF. Thanks to hxp for hosting!
+This was an incredibly difficult but rewarding CTF. Thanks to hxp for hosting!
 
 >Description:
 >>Create an awesome template for your valentine and share it with the world!
