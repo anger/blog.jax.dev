@@ -1,112 +1,121 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Tags on Jax&#39;s Hideout.</title>
-    <link>https://anger.github.io/blog/tags/</link>
-    <description>Recent content in Tags on Jax&#39;s Hideout.</description>
+    <title>Tags on Jax | Anger</title>
+    <link>https://blog.jaxd.dev/tags/</link>
+    <description>Recent content in Tags on Jax | Anger</description>
     <image>
-      <title>Jax&#39;s Hideout.</title>
-      <url>https://anger.github.io/blog/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>https://anger.github.io/blog/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+      <title>Jax | Anger</title>
+      <url>https://blog.jaxd.dev/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://blog.jaxd.dev/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 14 Feb 2023 06:59:00 +0000</lastBuildDate><atom:link href="https://anger.github.io/blog/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 12 Mar 2023 16:52:12 -0400</lastBuildDate><atom:link href="https://blog.jaxd.dev/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>2023</title>
-      <link>https://anger.github.io/blog/tags/2023/</link>
-      <pubDate>Tue, 14 Feb 2023 06:59:00 +0000</pubDate>
+      <link>https://blog.jaxd.dev/tags/2023/</link>
+      <pubDate>Sun, 12 Mar 2023 16:52:12 -0400</pubDate>
       
-      <guid>https://anger.github.io/blog/tags/2023/</guid>
+      <guid>https://blog.jaxd.dev/tags/2023/</guid>
       <description></description>
     </item>
     
     <item>
       <title>ctf</title>
-      <link>https://anger.github.io/blog/tags/ctf/</link>
-      <pubDate>Tue, 14 Feb 2023 06:59:00 +0000</pubDate>
+      <link>https://blog.jaxd.dev/tags/ctf/</link>
+      <pubDate>Sun, 12 Mar 2023 16:52:12 -0400</pubDate>
       
-      <guid>https://anger.github.io/blog/tags/ctf/</guid>
+      <guid>https://blog.jaxd.dev/tags/ctf/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>LACTF</title>
-      <link>https://anger.github.io/blog/tags/lactf/</link>
-      <pubDate>Tue, 14 Feb 2023 06:59:00 +0000</pubDate>
+      <title>hxp</title>
+      <link>https://blog.jaxd.dev/tags/hxp/</link>
+      <pubDate>Sun, 12 Mar 2023 16:52:12 -0400</pubDate>
       
-      <guid>https://anger.github.io/blog/tags/lactf/</guid>
+      <guid>https://blog.jaxd.dev/tags/hxp/</guid>
       <description></description>
     </item>
     
     <item>
       <title>write-up</title>
-      <link>https://anger.github.io/blog/tags/write-up/</link>
+      <link>https://blog.jaxd.dev/tags/write-up/</link>
+      <pubDate>Sun, 12 Mar 2023 16:52:12 -0400</pubDate>
+      
+      <guid>https://blog.jaxd.dev/tags/write-up/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>LACTF</title>
+      <link>https://blog.jaxd.dev/tags/lactf/</link>
       <pubDate>Tue, 14 Feb 2023 06:59:00 +0000</pubDate>
       
-      <guid>https://anger.github.io/blog/tags/write-up/</guid>
+      <guid>https://blog.jaxd.dev/tags/lactf/</guid>
       <description></description>
     </item>
     
     <item>
       <title>C&#43;&#43;</title>
-      <link>https://anger.github.io/blog/tags/c&#43;&#43;/</link>
+      <link>https://blog.jaxd.dev/tags/c&#43;&#43;/</link>
       <pubDate>Sun, 05 Feb 2023 06:59:00 +0000</pubDate>
       
-      <guid>https://anger.github.io/blog/tags/c&#43;&#43;/</guid>
+      <guid>https://blog.jaxd.dev/tags/c&#43;&#43;/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Programming</title>
-      <link>https://anger.github.io/blog/tags/programming/</link>
+      <link>https://blog.jaxd.dev/tags/programming/</link>
       <pubDate>Sun, 05 Feb 2023 06:59:00 +0000</pubDate>
       
-      <guid>https://anger.github.io/blog/tags/programming/</guid>
+      <guid>https://blog.jaxd.dev/tags/programming/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Attacks</title>
-      <link>https://anger.github.io/blog/tags/attacks/</link>
+      <link>https://blog.jaxd.dev/tags/attacks/</link>
       <pubDate>Sun, 11 Dec 2022 06:59:00 +0000</pubDate>
       
-      <guid>https://anger.github.io/blog/tags/attacks/</guid>
+      <guid>https://blog.jaxd.dev/tags/attacks/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Hacking</title>
-      <link>https://anger.github.io/blog/tags/hacking/</link>
+      <link>https://blog.jaxd.dev/tags/hacking/</link>
       <pubDate>Sun, 11 Dec 2022 06:59:00 +0000</pubDate>
       
-      <guid>https://anger.github.io/blog/tags/hacking/</guid>
+      <guid>https://blog.jaxd.dev/tags/hacking/</guid>
       <description></description>
     </item>
     
     <item>
       <title>certifications</title>
-      <link>https://anger.github.io/blog/tags/certifications/</link>
+      <link>https://blog.jaxd.dev/tags/certifications/</link>
       <pubDate>Wed, 20 Oct 2021 06:59:00 +0000</pubDate>
       
-      <guid>https://anger.github.io/blog/tags/certifications/</guid>
+      <guid>https://blog.jaxd.dev/tags/certifications/</guid>
       <description></description>
     </item>
     
     <item>
       <title>CompTIA</title>
-      <link>https://anger.github.io/blog/tags/comptia/</link>
+      <link>https://blog.jaxd.dev/tags/comptia/</link>
       <pubDate>Wed, 20 Oct 2021 06:59:00 +0000</pubDate>
       
-      <guid>https://anger.github.io/blog/tags/comptia/</guid>
+      <guid>https://blog.jaxd.dev/tags/comptia/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Security&#43;</title>
-      <link>https://anger.github.io/blog/tags/security&#43;/</link>
+      <link>https://blog.jaxd.dev/tags/security&#43;/</link>
       <pubDate>Wed, 20 Oct 2021 06:59:00 +0000</pubDate>
       
-      <guid>https://anger.github.io/blog/tags/security&#43;/</guid>
+      <guid>https://blog.jaxd.dev/tags/security&#43;/</guid>
       <description></description>
     </item>
     

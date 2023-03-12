@@ -2,7 +2,7 @@
 author: "Jax"
 slug: "hxp2023"
 aliases: ["/hxp2023"]
-title: "hxp 2023 Valentine  Write Up"
+title: "hxp 2023 Valentine  Write-Up"
 summary: "My write up for valentine on hxp 2023."
 tags: ["ctf", "hxp", "write-up", "2023"]
 date: 2023-03-12T16:52:12-04:00

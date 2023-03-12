@@ -2,60 +2,66 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://anger.github.io/blog/tags/2023/</loc>
+    <loc>https://blog.jaxd.dev/tags/2023/</loc>
+    <lastmod>2023-03-12T16:52:12-04:00</lastmod>
+  </url><url>
+    <loc>https://blog.jaxd.dev/tags/ctf/</loc>
+    <lastmod>2023-03-12T16:52:12-04:00</lastmod>
+  </url><url>
+    <loc>https://blog.jaxd.dev/tags/hxp/</loc>
+    <lastmod>2023-03-12T16:52:12-04:00</lastmod>
+  </url><url>
+    <loc>https://blog.jaxd.dev/post/hxp2023/</loc>
+    <lastmod>2023-03-12T16:52:12-04:00</lastmod>
+  </url><url>
+    <loc>https://blog.jaxd.dev/</loc>
+    <lastmod>2023-03-12T16:52:12-04:00</lastmod>
+  </url><url>
+    <loc>https://blog.jaxd.dev/post/</loc>
+    <lastmod>2023-03-12T16:52:12-04:00</lastmod>
+  </url><url>
+    <loc>https://blog.jaxd.dev/tags/</loc>
+    <lastmod>2023-03-12T16:52:12-04:00</lastmod>
+  </url><url>
+    <loc>https://blog.jaxd.dev/tags/write-up/</loc>
+    <lastmod>2023-03-12T16:52:12-04:00</lastmod>
+  </url><url>
+    <loc>https://blog.jaxd.dev/tags/lactf/</loc>
     <lastmod>2023-02-14T06:59:00+00:00</lastmod>
   </url><url>
-    <loc>https://anger.github.io/blog/tags/ctf/</loc>
+    <loc>https://blog.jaxd.dev/post/lactf2023/</loc>
     <lastmod>2023-02-14T06:59:00+00:00</lastmod>
   </url><url>
-    <loc>https://anger.github.io/blog/</loc>
-    <lastmod>2023-02-14T06:59:00+00:00</lastmod>
-  </url><url>
-    <loc>https://anger.github.io/blog/tags/lactf/</loc>
-    <lastmod>2023-02-14T06:59:00+00:00</lastmod>
-  </url><url>
-    <loc>https://anger.github.io/blog/post/lactf2023/</loc>
-    <lastmod>2023-02-14T06:59:00+00:00</lastmod>
-  </url><url>
-    <loc>https://anger.github.io/blog/post/</loc>
-    <lastmod>2023-02-14T06:59:00+00:00</lastmod>
-  </url><url>
-    <loc>https://anger.github.io/blog/tags/</loc>
-    <lastmod>2023-02-14T06:59:00+00:00</lastmod>
-  </url><url>
-    <loc>https://anger.github.io/blog/tags/write-up/</loc>
-    <lastmod>2023-02-14T06:59:00+00:00</lastmod>
-  </url><url>
-    <loc>https://anger.github.io/blog/tags/c&#43;&#43;/</loc>
+    <loc>https://blog.jaxd.dev/tags/c&#43;&#43;/</loc>
     <lastmod>2023-02-05T06:59:00+00:00</lastmod>
   </url><url>
-    <loc>https://anger.github.io/blog/post/c-plus-plus-is-odd/</loc>
+    <loc>https://blog.jaxd.dev/post/c-plus-plus-is-odd/</loc>
     <lastmod>2023-02-05T06:59:00+00:00</lastmod>
   </url><url>
-    <loc>https://anger.github.io/blog/tags/programming/</loc>
+    <loc>https://blog.jaxd.dev/tags/programming/</loc>
     <lastmod>2023-02-05T06:59:00+00:00</lastmod>
   </url><url>
-    <loc>https://anger.github.io/blog/post/a-practical-guide-to-supply-chain-attacks/</loc>
+    <loc>https://blog.jaxd.dev/post/a-practical-guide-to-supply-chain-attacks/</loc>
     <lastmod>2022-12-11T06:59:00+00:00</lastmod>
   </url><url>
-    <loc>https://anger.github.io/blog/tags/attacks/</loc>
+    <loc>https://blog.jaxd.dev/tags/attacks/</loc>
     <lastmod>2022-12-11T06:59:00+00:00</lastmod>
   </url><url>
-    <loc>https://anger.github.io/blog/tags/hacking/</loc>
+    <loc>https://blog.jaxd.dev/tags/hacking/</loc>
     <lastmod>2022-12-11T06:59:00+00:00</lastmod>
   </url><url>
-    <loc>https://anger.github.io/blog/tags/certifications/</loc>
+    <loc>https://blog.jaxd.dev/tags/certifications/</loc>
     <lastmod>2021-10-20T06:59:00+00:00</lastmod>
   </url><url>
-    <loc>https://anger.github.io/blog/tags/comptia/</loc>
+    <loc>https://blog.jaxd.dev/tags/comptia/</loc>
     <lastmod>2021-10-20T06:59:00+00:00</lastmod>
   </url><url>
-    <loc>https://anger.github.io/blog/post/security-plus-at-16/</loc>
+    <loc>https://blog.jaxd.dev/post/security-plus-at-16/</loc>
     <lastmod>2021-10-20T06:59:00+00:00</lastmod>
   </url><url>
-    <loc>https://anger.github.io/blog/tags/security&#43;/</loc>
+    <loc>https://blog.jaxd.dev/tags/security&#43;/</loc>
     <lastmod>2021-10-20T06:59:00+00:00</lastmod>
   </url><url>
-    <loc>https://anger.github.io/blog/categories/</loc>
+    <loc>https://blog.jaxd.dev/categories/</loc>
   </url>
 </urlset>
