@@ -1,4 +1,4 @@
-baseURL: https://blog.jaxd.dev
+baseURL: https://jaxd.dev
 title: Jax | Anger
 paginate: 5
 theme: PaperMod
@@ -98,7 +98,7 @@ params:
     hiddenInSingle: true # hide on single page
 
   editPost:
-    URL: "https://github.com/blog.jaxd.dev/content"
+    URL: "https://github.com/anger/jaxd.dev/content"
     Text: "Suggest Changes" # edit text
     appendFilePath: true # to append file path to Edit link
 
@@ -118,10 +118,8 @@ menu:
       name: tags
       url: /tags/
       weight: 20
-    - identifier: example
-      name: jaxd.dev
-      url: https://jaxd.dev
-      weight: 30
+
+
 # Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
 ##pygmentsUseClasses: true
 markup:
