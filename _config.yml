@@ -1,0 +1,71 @@
+#
+###################################
+# Site wide configuration
+####################################
+#
+title: Jax Dunfee
+email: jaxdunfee@protonmail.com
+description: My personal site
+url: "https://jaxd.dev"
+keywords: ["blog", "ctf", "cybersecurity", "web development", "security", "capture the flag", "web", "pwn", "programming"]
+
+#
+###################################
+# Jekyll configuration
+####################################
+#
+timezone:          America/New_York
+markdown:          kramdown
+highlighter:       rouge
+excerpt_separator: <!--more-->
+permalink:         /articles/:year-:month/:title
+
+kramdown:
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  enable_coderay: false
+
+#
+###################################
+# Site Owner configuration
+####################################
+#
+owner:
+  name: Jax | Anger
+  avatar: me.png
+  job: ""
+  bio: "web / ctf / student"
+  email: jaxdunfee@protonmail.com
+  disqus-shortname:
+  twitter: # username
+  facebook: #username
+  google:
+    plus: #username
+    analytics: UA-154870924-1
+    verify:
+    ad-client:
+    ad-slot:
+  bing-verify:
+  github: anger
+  gitlab: #username
+  stackoverflow: #123456/username   from a "http://stackoverflow.com/users/123456/username" link
+  linkedin: jaxdunfee
+  skype: #username
+  xing: #username
+  instagram: #username
+  lastfm: #username
+  tumblr: #username
+  pinterest: #username
+  foursquare: #username
+  steam: #username
+  dribbble: #username
+  youtube: #username
+  soundcloud: #username
+  weibo: #username
+  flickr: #username
+  500px: #username
+  codepen: #username
+  reddit: #username
+  telegram: #username
