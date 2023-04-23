@@ -5,7 +5,6 @@ excerpt: "A practical guide to Supply Chain Attacks in a cyber environment."
 categories: [Guides, Learn]
 tags: []
 ---
-
 ## Introduction  
 Our lives revolve around code created by others we do not know. From the QR codes we scan to get the menu at a restaurant to the ad-infested app we download to waste time, all of these applications require huge amounts of code to operate, with most of this code not even being created by the organization using it.
 
