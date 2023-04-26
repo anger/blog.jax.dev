@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Earning the Security+ at 16
-excerpt: "How I passed the CompTIA Security+ exam at 16."
+excerpt: "A breif examination on how I passed the CompTIA Security+ exam at 16."
 categories: [Guides, Learn]
 tags: []
 ---
