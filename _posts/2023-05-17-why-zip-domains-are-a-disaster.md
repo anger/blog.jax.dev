@@ -27,7 +27,7 @@ Modern browsers like Chrome, Safari, and Edge have implemented security measures
 
 While this behavior enhances user security by preventing accidental authentication, it can also make certain phishing attacks more believable. Attackers may take advantage of combinations of the @ operator and unicode characters (such as ∕, U+2215) to create deceptive URLs. As the U+2215 slashes are treated as part of the User Info portion of the url, we will be redirected to the malicious site.
 
-For another example, the URL https://google.com@jax.dev, will actually take the user to jax.dev. 
+For another example, the URL [](https://google.com@jax.dev), will actually take the user to jax.dev. 
 
 It is crucial for users to remain vigilant and exercise caution when interacting with unfamiliar URLs or suspicious websites.
 ### Difficulty in Identifying Legitimate Sources
