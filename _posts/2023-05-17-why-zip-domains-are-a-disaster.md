@@ -14,12 +14,20 @@ A .zip domain refers to a top-level domain (TLD) that uses the ".zip" extension.
 ### Domain Spoofing and Phishing Attacks
 Threat actors can exploit the familiarity of .zip files and create malicious websites with .zip domains that appear legitimate. These spoofed domains can be used for phishing attacks, where unsuspecting users are tricked into believing they are accessing a trusted website or downloading a harmless file. By clicking on a link from a .zip domain, users may unknowingly expose their sensitive information or install malware on their systems.
 
-#### Example:
+### Example:
 Can you see the difference between these two domains:
 ![](https://i.imgur.com/IfsfuqE.png)
 
 It just so happens that the second is a redirect to the domain `v2.18.1.zip`. Can you see the potential now?
+#### Why it works
 
+It is important to be aware of the potential risks associated with certain URL configurations and how they can be exploited for phishing attacks. In the example provided, there is a difference between the two domains that may not be immediately noticeable to most people. The second domain is actually a redirect to the domain `v2.18.1.zip`, which can be used in malicious ways.
+
+Modern browsers like Chrome, Safari, and Edge have implemented security measures to prioritize user safety. These browsers disregard the user info section of a URL, which includes everything between the scheme (https://) and the @ operator. They focus solely on the hostname portion of the URL.
+
+While this behavior enhances user security by preventing accidental authentication, it can also make certain phishing attacks more believable. Attackers may take advantage of combinations of the @ operator and unicode characters (such as ∕, U+2215) to create deceptive URLs.
+
+It is crucial for users to remain vigilant and exercise caution when interacting with unfamiliar URLs or suspicious websites.
 ### Difficulty in Identifying Legitimate Sources
 The proliferation of .zip domains can make it challenging for users to discern between legitimate and malicious sources. With traditional domain extensions like .com or .org, users have come to associate certain expectations and trust certain websites based on their familiarity. However, the introduction of .zip domains undermines this trust, as users may not have a clear understanding of which sources are genuine in their appearance and which are potential threats.
 
