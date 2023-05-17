@@ -14,7 +14,7 @@ A .zip domain refers to a top-level domain (TLD) that uses the ".zip" extension.
 ### Domain Spoofing and Phishing Attacks
 Threat actors can exploit the familiarity of .zip files and create malicious websites with .zip domains that appear legitimate. These spoofed domains can be used for phishing attacks, where unsuspecting users are tricked into believing they are accessing a trusted website or downloading a harmless file. By clicking on a link from a .zip domain, users may unknowingly expose their sensitive information or install malware on their systems.
 
-### Example:
+### Example
 Can you see the difference between these two domains:
 ![](https://i.imgur.com/IfsfuqE.png)
 
@@ -25,7 +25,9 @@ It is important to be aware of the potential risks associated with certain URL c
 
 Modern browsers like Chrome, Safari, and Edge have implemented security measures to prioritize user safety. These browsers disregard the user info section of a URL, which includes everything between the scheme (https://) and the @ operator. They focus solely on the hostname portion of the URL.
 
-While this behavior enhances user security by preventing accidental authentication, it can also make certain phishing attacks more believable. Attackers may take advantage of combinations of the @ operator and unicode characters (such as ∕, U+2215) to create deceptive URLs.
+While this behavior enhances user security by preventing accidental authentication, it can also make certain phishing attacks more believable. Attackers may take advantage of combinations of the @ operator and unicode characters (such as ∕, U+2215) to create deceptive URLs. As the U+2215 slashes are treated as part of the User Info portion of the url, we will be redirected to the malicious site.
+
+For another example, the URL https://google.com@jax.dev, will actually take the user to jax.dev. 
 
 It is crucial for users to remain vigilant and exercise caution when interacting with unfamiliar URLs or suspicious websites.
 ### Difficulty in Identifying Legitimate Sources
