@@ -1,4 +1,4 @@
-# jax.dev  
+# blog.jax.dev  
 
 
-https://jax.dev
+https://blog.jax.dev
