@@ -5,9 +5,6 @@ excerpt: "A technical analysis of typography-based cyber security vulnerabilitie
 categories: [Guides, Learn]
 tags: []
 ---
-
-# Fontpocalypse - The Danger of Typography-Based Cyber Security Vulnerabilities
-
 <p align="center">
   <img src="https://github.com/anger/fontpocalypse/blob/main/src/fontpocalypse.png?raw=true" alt="Fontpocalypse" width="200" height="200">
 </p>
