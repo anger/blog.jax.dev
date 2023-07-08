@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Fontpocalypse - The Danger of Typography-Based Cyber Security Vulnerabilities
-excerpt: "A technical analysis of typography-based cyber security vulnerabilities and the importance of caution."
+excerpt: "A technical analysis of typography-based cyber security vulnerabilities and the importance of caution when copy and pasting items found online."
 categories: [Guides, Learn]
 tags: []
 ---
