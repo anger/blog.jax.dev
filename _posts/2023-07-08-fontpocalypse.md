@@ -70,6 +70,8 @@ Stay informed about the evolving landscape of typography-based vulnerabilities. 
 
 Typography-based cyber security vulnerabilities pose a genuine threat in our digital world. The Fontpocalypse tool provides valuable insights into these risks, enabling users to grasp the technical aspects and understand the manipulative tactics employed by attackers. By being vigilant, verifying sources, and validating text, we can protect ourselves and our systems from typography-based attacks. Let us navigate the world of typography with caution and secure our digital world!
 
-DEMO: [https://fontpocalypse.jax.dev/](https://fontpocalypse.jax.dev/)
+
+DEMO SITE: [https://fontpocalypse.jax.dev/](https://fontpocalypse.jax.dev/)
+
 GitHub: [https://github.com/anger/fontpocalypse](https://github.com/anger/fontpocalypse)
 
