@@ -1,6 +1,6 @@
 # blog.jax.dev  
 
-a personal site / blog
+a personal blog
 
 
 https://blog.jax.dev
