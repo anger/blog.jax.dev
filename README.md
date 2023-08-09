@@ -1,6 +1,6 @@
 # blog.jax.dev  
 
-a personal blog for writeyps and more
+a personal blog
 
 
 https://blog.jax.dev
