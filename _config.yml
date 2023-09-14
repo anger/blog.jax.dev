@@ -36,14 +36,14 @@ owner:
   name: Jax | Anger
   avatar: me.png
   job: ""
-  bio: "web / ctf / student"
+  bio:  "web, pwn :: ctfs + security research"
   email: jaxdunfee@protonmail.com
   disqus-shortname:
   twitter: # username
   facebook: #username
   google:
     plus: #username
-    analytics: UA-154870924-1
+    analytics:
     verify:
     ad-client:
     ad-slot:
