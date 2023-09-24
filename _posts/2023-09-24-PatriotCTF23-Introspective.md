@@ -1,7 +1,7 @@
 ---
 layout: post
 title: PatriotCTF 2023 - Introspective
-excerpt: "Some insight into PatriotCTF 2023 and the infrastructure behind it."
+excerpt: "Earlier this month, September 8th-10th marked this years PatriotCTF. We had over 3000 users from over 30 different countries play with us this year. This was my first year hosting it as Vice President of the GMU Cyber Security Club, MasonCC. I wanted to write a post about the infrastructure behind the CTF and some of the challenges we faced."
 categories: [Learn]
 tags: [Infrastructure]
 ---
