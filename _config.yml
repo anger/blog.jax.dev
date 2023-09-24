@@ -33,7 +33,7 @@ kramdown:
 ####################################
 #
 owner:
-  name: Jax | Anger
+  name: Jax
   avatar: me.png
   job: ""
   bio:  "web, pwn :: ctfs + security research"
