@@ -66,7 +66,7 @@ We are provided a link and some source code. The source code is as follows:
 </html>
 ```
 
-We have a lot to look at, not only do have an extrmemly extensive blacklist, but we also have a database conneciton. 
+We have a lot to look at, not only do have an extrmemly extensive blacklist, but we also have a database conneciton. We can see that the database connection is to a mysql database, and we can see that the database name is dockerExample.
 
 Looking at the sql file we are given, we can see that there are two tables, Person and Flag_is_secret. 
 
