@@ -5,6 +5,7 @@ excerpt: "Despite being titled ezphp, this challenge was anything but easy. Let'
 categories: [Writeups]
 tags: [web]
 ---
+> This site is now archived. Please visit [https://jax.dev/blog](https://jax.dev/blog) for the latest content.
 Despite being titled ezphp, this challenge was anything but easy. It took be beyond the end of the CTF to finish, but it was a fun challenge nonetheless. 
 
 We are provided a link and some source code. The source code is as follows:

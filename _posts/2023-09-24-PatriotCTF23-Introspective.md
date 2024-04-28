@@ -8,6 +8,7 @@ tags: [Infrastructure]
 <p align="center">
   <img src="https://competitivecyber.club/images/transparent.png" alt="MasonCC Logo" width="175px" height="175px">
 </p>
+> This site is now archived. Please visit [https://jax.dev/blog](https://jax.dev/blog) for the latest content.
 Earlier this month, September 8th-10th marked this years PatriotCTF. We had over 3000 users from over 30 different countries play with us this year.  This was my first year hosting it as Vice President of the GMU Cyber Security Club, MasonCC. I wanted to write a post about the infrastructure behind the CTF and some of the challenges we faced.
 
 ## CTF Design

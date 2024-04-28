@@ -5,6 +5,7 @@ excerpt: "The infosec community has been buzzing with concern over a recent deve
 categories: [Guides, Learn]
 tags: []
 ---
+> This site is now archived. Please visit [https://jax.dev/blog](https://jax.dev/blog) for the latest content.
 ## Introduction
 The infosec community has been buzzing with concern over a recent development that emerged this month: the introduction of .zip domains. The news broke on May 3rd, 2023, when a set of eight domains were [released](https://twitter.com/Google/status/1653866291692728320) into the wild. Among them were seemingly innocent extensions like .dad, .phd, .prof, .esq, .foo, .zip, .mov, and .nexus. However, hidden within these extensions lies a lurking danger that has captured the attention of security researchers worldwide.
 

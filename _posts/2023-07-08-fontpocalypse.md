@@ -8,7 +8,7 @@ tags: []
 <p align="center">
   <img src="https://github.com/anger/fontpocalypse/blob/main/src/fontpocalypse.png?raw=true" alt="Fontpocalypse" width="200" height="200">
 </p>
-
+> This site is now archived. Please visit [https://jax.dev/blog](https://jax.dev/blog) for the latest content.
 
 ## Introduction
 

@@ -5,6 +5,7 @@ excerpt: "A breif examination on how I passed the CompTIA Security+ exam at 16."
 categories: [Guides, Learn]
 tags: []
 ---
+> This site is now archived. Please visit [https://jax.dev/blog](https://jax.dev/blog) for the latest content.
 # Earning the CompTIA Security+ at 16
 > This article is over a year old, and as such, the information may not be accurate to the current state of things
 ## Introduction
