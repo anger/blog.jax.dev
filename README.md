@@ -1,6 +1,7 @@
 # blog.jax.dev  
 
-a personal blog
+__a personal blog__
 
+no longer in use, new one can be found at
 
-https://blog.jax.dev
+https://jax.dev/blog
